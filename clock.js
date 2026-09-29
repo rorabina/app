@@ -1,18 +1,3 @@
-Looking at [`clock.html`](https://rorabina.github.io/app/clock.html) and your repository's [`clock.js`](https://github.com/rorabina/app/blob/gh-pages/clock.js), the script is finding the `"CLOCK"` element once on page load, but the target element is lost on subsequent ticks.
-
-Here is why it freezes:
-
-1. On the first run, `clock.js` finds the element with text `"CLOCK"` and replaces its text with `"08:49:24 PM"`.
-2. One second later, `setInterval` calls `updateClock()` again.
-3. The script searches for an element whose text content equals `"clock"`. Because the element's text is now `"08:49:24 PM"` (and no longer `"clock"`), the search fails to find `clockElement` and immediately exits without updating the time!
-
----
-
-### The Fix
-
-To ensure the script keeps track of the element even after its text changes, update [`clock.js`](https://github.com/rorabina/app/blob/gh-pages/clock.js) to store a reference to the matched element outside the repeating function:
-
-```javascript
 (function () {
   let clockElement = null;
 
@@ -50,9 +35,3 @@ To ensure the script keeps track of the element even after its text changes, upd
   // Continuously update every second (1000ms)
   setInterval(updateClock, 1000);
 })();
-
-```
-
-### Why this works:
-
-By caching `clockElement` in a variable outside `updateClock()`, the script remembers which element it found the first time and will keep updating its text content every second regardless of what string it contains.
