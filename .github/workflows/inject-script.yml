@@ -1,21 +1,25 @@
-name: Inject Script into HTML
+name: Build and Deploy Clock Site
 
 on:
   push:
     branches:
       - gh-pages
 
-# Cancels running builds if a new push arrives
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: "pages"
   cancel-in-progress: true
 
 jobs:
-  inject-js:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -26,10 +30,14 @@ jobs:
             sed -i 's|</body>|<script src="assets/clock.js"></script>\n</body>|i' clock.html
           fi
 
-      - name: Commit and Push Changes
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add clock.html
-          # [skip ci] prevents the bot's push from triggering another workflow run
-          git diff --quiet && git diff --staged --quiet || (git commit -m "auto-inject clock.js script [skip ci]" && git push)
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
