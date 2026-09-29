@@ -8,8 +8,9 @@
 
       if (!clockElement) {
         const elements = Array.from(document.querySelectorAll('*'));
+        // Searches for leaf elements whose exact text content is "NULL1"
         clockElement = elements.find(
-          (el) => el.children.length === 0 && el.textContent.trim().toLowerCase() === 'clock'
+          (el) => el.children.length === 0 && el.textContent.trim().toUpperCase() === 'NULL1'
         );
       }
     }
