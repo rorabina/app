@@ -1,9 +1,7 @@
 (function () {
   function updateClock() {
-    // 1. Search for an element with id="clock" or class="clock"
     let clockElement = document.getElementById('clock') || document.querySelector('.clock');
 
-    // 2. Fallback: Search all leaf elements containing "clock" (case-insensitive)
     if (!clockElement) {
       const elements = Array.from(document.querySelectorAll('*'));
       clockElement = elements.find(
@@ -26,6 +24,9 @@
     clockElement.textContent = `${formattedHours}:${minutes}:${seconds} ${ampm}`;
   }
 
+  // Run immediately once loaded
   updateClock();
+
+  // Continuously update every second (1000ms)
   setInterval(updateClock, 1000);
 })();
