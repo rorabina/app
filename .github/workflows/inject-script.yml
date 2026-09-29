@@ -27,7 +27,7 @@ jobs:
       - name: Inject script tag into clock.html
         run: |
           if ! grep -q 'clock.js' clock.html; then
-            sed -i 's|</body>|<script src="assets/clock.js"></script>\n</body>|i' clock.html
+            sed -i 's|</body>|<script src="clock.js"></script>\n</body>|i' clock.html
           fi
 
       - name: Setup Pages
