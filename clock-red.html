@@ -37,7 +37,7 @@
             padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
         }
 
-        /* Segmented calculator/watch display with sharp edges (glow removed) */
+        /* Segmented calculator/watch display with sharp edges and double-digit hour support */
         #live-clock {
             font-family: 'DS-Digital', sans-serif;
             font-size: clamp(3.5rem, 12vw, 7.5rem);
@@ -110,7 +110,7 @@
                 const now = new Date();
                 const options = { 
                     timeZone: "Asia/Manila", 
-                    hour: "numeric", 
+                    hour: "2-digit", 
                     minute: "2-digit", 
                     second: "2-digit", 
                     hour12: true 
