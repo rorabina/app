@@ -37,14 +37,15 @@
             padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
         }
 
-        /* Segmented calculator/watch display with sharp edges and double-digit hour support */
+        /* Segmented calculator display with tabular numbers to prevent digit 1 shifting */
         #live-clock {
-            font-family: 'DS-Digital', sans-serif;
+            font-family: 'DS-Digital', monospace, sans-serif;
             font-size: clamp(3.5rem, 12vw, 7.5rem);
             font-weight: bold;
             letter-spacing: 4px;
             text-align: center;
             color: var(--text-color);
+            font-variant-numeric: tabular-nums;
         }
 
         footer {
@@ -56,8 +57,8 @@
             align-items: center;
             gap: 10px;
             font-size: 0.9rem;
-            border-top: 1px solid rgba(166, 169, 156, 0.2);
-            background-color: rgba(0, 0, 0, 0.85);
+            border-top: none; /* Removed the grey horizontal line */
+            background-color: var(--bg-color); /* Seamless black background */
             box-sizing: border-box;
             color: var(--footer-color);
         }
