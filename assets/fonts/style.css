@@ -1,0 +1,10 @@
+@font-face {
+   font-family: 'DS-DIGIT';
+   font-display: swap;
+   src: url('DS-DIGIT/font.TTF');
+}
+@font-face {
+   font-family: 'DS-DIGI';
+   font-display: swap;
+   src: url('DS-DIGI/font.TTF');
+}
