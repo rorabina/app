@@ -37,15 +37,29 @@
             padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
         }
 
-        /* Segmented calculator display with tabular numbers to prevent digit 1 shifting */
+        /* Segmented calculator display container */
         #live-clock {
             font-family: 'DS-Digital', monospace, sans-serif;
             font-size: clamp(3.5rem, 12vw, 7.5rem);
             font-weight: bold;
-            letter-spacing: 4px;
             text-align: center;
             color: var(--text-color);
-            font-variant-numeric: tabular-nums;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        /* Force each character into a uniform fixed-width slot so '1' never shifts */
+        #live-clock .char-slot {
+            display: inline-block;
+            text-align: center;
+            width: 0.6em; /* Uniform slot width for all digits and symbols */
+        }
+
+        /* Wider slot specifically for spaces between time and AM/PM/PST */
+        #live-clock .char-slot.space {
+            width: 0.3em;
         }
 
         footer {
@@ -57,8 +71,8 @@
             align-items: center;
             gap: 10px;
             font-size: 0.9rem;
-            border-top: none; /* Removed the grey horizontal line */
-            background-color: var(--bg-color); /* Seamless black background */
+            border-top: none; 
+            background-color: var(--bg-color); 
             box-sizing: border-box;
             color: var(--footer-color);
         }
@@ -93,7 +107,7 @@
 <body>
 
     <div class="main-container">
-        <!-- Live Segmented Digital Clock with Seconds -->
+        <!-- Live Segmented Digital Clock with Fixed-Width Character Slots -->
         <div id="live-clock">Loading clock...</div>
     </div>
 
@@ -118,7 +132,15 @@
                 };
                 const timeStr = new Intl.DateTimeFormat("en-US", options).format(now) + " PST";
                 const el = document.getElementById("live-clock");
-                if (el) el.innerHTML = timeStr;
+                if (el) {
+                    // Wrap every character in a fixed-width span slot to prevent shifting
+                    el.innerHTML = timeStr.split('').map(char => {
+                        const isSpace = char === ' ';
+                        const cssClass = isSpace ? 'char-slot space' : 'char-slot';
+                        const displayChar = isSpace ? '&nbsp;' : char;
+                        return `<span class="${cssClass}">${displayChar}</span>`;
+                    }).join('');
+                }
             }
             setInterval(updateClock, 1000);
             updateClock();
