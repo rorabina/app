@@ -1,73 +1,126 @@
 <!DOCTYPE html>
-<html  >
+<html lang="en">
 <head>
-  <!-- Site made with Mobirise Website Builder v6.1.12, https://mobirise.com -->
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="generator" content="Mobirise v6.1.12, mobirise.com">
-  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
-  <link rel="shortcut icon" href="assets/images/20260918-112542.png" type="image/x-icon">
-  <meta name="description" content="Red digital clock">
-  
-  
-  <title>Clock (Red)</title>
-  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" href="assets/theme/css/style.css">
-  <link href="assets/fonts/style.css" rel="stylesheet">
-  <link rel="preload" href="https://fonts.googleapis.com/css?family=Inter+Tight:100,200,300,400,500,600,700,800,900,100i,200i,300i,400i,500i,600i,700i,800i,900i&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter+Tight:100,200,300,400,500,600,700,800,900,100i,200i,300i,400i,500i,600i,700i,800i,900i&display=swap"></noscript>
-  <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css?v=U5XwMO"><link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css?v=U5XwMO" type="text/css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Clock (Red)</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root {
+            --bg-color: #000000;
+            --text-color: #ff3333; /* Red glow theme */
+        }
 
-  
-  
-  
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-sizing: border-box;
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
+        }
+
+        /* Digital clock display styled similar to your digital aesthetic */
+        #live-clock {
+            font-size: clamp(2rem, 8vw, 5rem);
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-align: center;
+            text-shadow: 0 0 15px rgba(255, 51, 51, 0.4);
+        }
+
+        footer {
+            width: 100%;
+            padding: 15px 20px;
+            padding-bottom: calc(15px + env(safe-area-inset-bottom));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: rgba(0, 0, 0, 0.8);
+            box-sizing: border-box;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .footer-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        .copyright {
+            opacity: 0.6;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-  
-  <section data-bs-version="5.1" class="header09 startm5 cid-vwBSqqlY6C mbr-fullscreen" id="header09-0">	
-    
-	
-	
-	<div class="container-fluid">
-		<div class="row">
-			<div class="content-wrap col-12 col-md-8">
-				<h1 class="mbr-section-title mbr-fonts-style mbr-white mb-4 display-1">
-					<strong>NULL1</strong></h1>
-				
-				
-				
-			</div>
-		</div>
-	</div>
-</section>
 
-<section data-bs-version="5.1" class="footer2 cid-vxJhebgYMH" once="footers" id="footer02-f">
-    
-
-    
-    
-
-    <div class="container">
-        <div class="row flex-row-reverse">
-            <div class="col-12 col-lg-6 center mt-2 mb-3">
-                <p class="mbr-fonts-style copyright mb-0 display-7">
-                    © Copyright 2026 Republic of Rabina - All Rights Reserved
-                </p>
-            </div>
-            <div class="col-12 col-lg-6 center">
-                <div class="row-links mt-2 mb-3">
-                    <ul class="row-links-soc">
-                        
-                        
-                        
-                        
-                    <li class="row-links-soc-item mbr-fonts-style display-7"><a href="https://rorabina.github.io" class="text-primary">Home</a></li><li class="row-links-soc-item mbr-fonts-style display-7"><a href="https://rorabina.github.io/web-utilities.html" class="text-primary">Web Utilities</a></li></ul>
-                </div>
-            </div>
-        </div>
+    <div class="main-container">
+        <!-- Live Clock with Seconds -->
+        <div id="live-clock">Loading clock...</div>
     </div>
-</section><section class="display-7" style="padding: 0;align-items: center;justify-content: center;flex-wrap: wrap;    align-content: center;display: flex;position: relative;height: 4rem;"><a href="https://mobiri.se/1740680" style="flex: 1 1;height: 4rem;position: absolute;width: 100%;z-index: 1;"><img alt="" style="height: 4rem;" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="></a><p style="margin: 0;text-align: center;" class="display-7">&#8204;</p><a style="z-index:1" href="https://mobirise.com/builder/ai-website-generator.html">AI Website Generator</a></section><script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>  <script src="assets/smoothscroll/smooth-scroll.js"></script>  <script src="assets/ytplayer/index.js"></script>  <script src="assets/theme/js/script.js"></script>  
-  
-  
+
+    <footer>
+        <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#">Web Utilities</a></li>
+        </ul>
+        <div class="copyright">&copy; Copyright 2026 Republic of Rabina - All Rights Reserved</div>
+    </footer>
+
+    <script src="sw-register.js"></script>
+    <script>
+        (function() {
+            function updateClock() {
+                const now = new Date();
+                // Formats date and time including seconds with Asia/Manila timezone
+                const options = { 
+                    timeZone: "Asia/Manila", 
+                    month: "short", 
+                    day: "numeric", 
+                    year: "numeric", 
+                    hour: "numeric", 
+                    minute: "2-digit", 
+                    second: "2-digit", 
+                    hour12: true 
+                };
+                const timeStr = new Intl.DateTimeFormat("en-US", options).format(now) + " PST";
+                const el = document.getElementById("live-clock");
+                if (el) el.innerHTML = timeStr;
+            }
+            setInterval(updateClock, 1000);
+            updateClock();
+        })();
+    </script>
 </body>
 </html>
