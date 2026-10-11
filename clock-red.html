@@ -5,15 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Clock (Red)</title>
     <link rel="manifest" href="manifest.json">
+    <!-- Import authentic segmented digital watch/calculator font from external stylesheet -->
+    <link href="https://fonts.cdnfonts.com/css/ds-digital" rel="stylesheet">
     <style>
-        @font-face {
-            font-family: 'DS-Digital';
-            src: url('assets/fonts/DS-DIGIT.woff2') format('woff2'),
-                 url('assets/fonts/DS-DIGIT.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
-
         :root {
             --bg-color: #000000;
             --text-color: #e04c3e;
@@ -43,15 +37,15 @@
             padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
         }
 
-        /* Digital clock display using DS-DIGIT font with fallback */
+        /* Segmented calculator/watch display using DS-Digital font */
         #live-clock {
-            font-family: 'DS-Digital', monospace, sans-serif;
-            font-size: clamp(3rem, 11vw, 7rem);
-            font-weight: normal;
-            letter-spacing: 3px;
+            font-family: 'DS-Digital', sans-serif;
+            font-size: clamp(3.5rem, 12vw, 7.5rem);
+            font-weight: bold;
+            letter-spacing: 4px;
             text-align: center;
             color: var(--text-color);
-            text-shadow: 0 0 18px rgba(224, 76, 62, 0.45);
+            text-shadow: 0 0 20px rgba(224, 76, 62, 0.5);
         }
 
         footer {
@@ -99,14 +93,14 @@
 <body>
 
     <div class="main-container">
-        <!-- Live Time-Only Clock with Seconds -->
+        <!-- Live Segmented Digital Clock with Seconds -->
         <div id="live-clock">Loading clock...</div>
     </div>
 
     <footer>
         <ul class="footer-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="#">Web Utilities</a></li>
+            <li><a href="https://rorabina.github.io/">Home</a></li>
+            <li><a href="https://rorabina.github.io/web-utilities.html">Web Utilities</a></li>
         </ul>
         <div class="copyright">&copy; Copyright 2026 Republic of Rabina - All Rights Reserved</div>
     </footer>
