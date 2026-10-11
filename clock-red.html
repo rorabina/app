@@ -6,9 +6,18 @@
     <title>Clock (Red)</title>
     <link rel="manifest" href="manifest.json">
     <style>
+        @font-face {
+            font-family: 'DS-Digital';
+            src: url('assets/fonts/DS-DIGIT.woff2') format('woff2'),
+                 url('assets/fonts/DS-DIGIT.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         :root {
             --bg-color: #000000;
-            --text-color: #ff3333; /* Red glow theme */
+            --text-color: #e04c3e;
+            --footer-color: #a6a99c;
         }
 
         html, body {
@@ -34,13 +43,15 @@
             padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
         }
 
-        /* Digital clock display styled similar to your digital aesthetic */
+        /* Digital clock display using DS-DIGIT font with fallback */
         #live-clock {
-            font-size: clamp(2.5rem, 9vw, 6rem);
-            font-weight: 700;
-            letter-spacing: 2px;
+            font-family: 'DS-Digital', monospace, sans-serif;
+            font-size: clamp(3rem, 11vw, 7rem);
+            font-weight: normal;
+            letter-spacing: 3px;
             text-align: center;
-            text-shadow: 0 0 15px rgba(255, 51, 51, 0.4);
+            color: var(--text-color);
+            text-shadow: 0 0 18px rgba(224, 76, 62, 0.45);
         }
 
         footer {
@@ -52,9 +63,10 @@
             align-items: center;
             gap: 10px;
             font-size: 0.9rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            background-color: rgba(0, 0, 0, 0.8);
+            border-top: 1px solid rgba(166, 169, 156, 0.2);
+            background-color: rgba(0, 0, 0, 0.85);
             box-sizing: border-box;
+            color: var(--footer-color);
         }
 
         .footer-links {
@@ -66,9 +78,9 @@
         }
 
         .footer-links a {
-            color: var(--text-color);
+            color: var(--footer-color);
             text-decoration: none;
-            opacity: 0.8;
+            opacity: 0.85;
             transition: opacity 0.2s;
         }
 
@@ -78,7 +90,8 @@
         }
 
         .copyright {
-            opacity: 0.6;
+            color: var(--footer-color);
+            opacity: 0.75;
             text-align: center;
         }
     </style>
@@ -102,7 +115,6 @@
         (function() {
             function updateClock() {
                 const now = new Date();
-                // Formats time with hours, minutes, seconds, and PST timezone while stripping out the date
                 const options = { 
                     timeZone: "Asia/Manila", 
                     hour: "numeric", 
