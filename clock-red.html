@@ -36,7 +36,7 @@
 
         /* Digital clock display styled similar to your digital aesthetic */
         #live-clock {
-            font-size: clamp(2rem, 8vw, 5rem);
+            font-size: clamp(2.5rem, 9vw, 6rem);
             font-weight: 700;
             letter-spacing: 2px;
             text-align: center;
@@ -86,7 +86,7 @@
 <body>
 
     <div class="main-container">
-        <!-- Live Clock with Seconds -->
+        <!-- Live Time-Only Clock with Seconds -->
         <div id="live-clock">Loading clock...</div>
     </div>
 
@@ -98,17 +98,13 @@
         <div class="copyright">&copy; Copyright 2026 Republic of Rabina - All Rights Reserved</div>
     </footer>
 
-    <script src="sw-register.js"></script>
     <script>
         (function() {
             function updateClock() {
                 const now = new Date();
-                // Formats date and time including seconds with Asia/Manila timezone
+                // Formats time with hours, minutes, seconds, and PST timezone while stripping out the date
                 const options = { 
                     timeZone: "Asia/Manila", 
-                    month: "short", 
-                    day: "numeric", 
-                    year: "numeric", 
                     hour: "numeric", 
                     minute: "2-digit", 
                     second: "2-digit", 
