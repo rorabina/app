@@ -122,11 +122,7 @@
       text-decoration: none;
       cursor: pointer;
       outline: none;
-      transition:
-        background-color 0.2s ease,
-        border-color 0.2s ease,
-        transform 0.15s ease,
-        box-shadow 0.2s ease;
+      transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -277,26 +273,27 @@
       }
     }
 
-    /* Windows / Desktop Fullscreen: Placed last and scaled subtly below default view */
+    /* Windows / Desktop: Default and Fullscreen consistent smaller scale */
     @media (hover: hover) and (pointer: fine) {
-      :root:fullscreen .clock-container .time-main,
-      :root:-webkit-full-screen .clock-container .time-main {
+      .clock-container .time-main {
         font-size: clamp(3rem, min(14.5vw, 32dvh), 11.25rem);
       }
 
-      :root:fullscreen .clock-container .time-sub,
-      :root:-webkit-full-screen .clock-container .time-sub {
+      .clock-container .time-sub {
         font-size: clamp(1.45rem, min(6.4vw, 13.5dvh), 4.6rem);
       }
 
-      :root:fullscreen .clock-container .control-btn,
-      :root:-webkit-full-screen .clock-container .control-btn {
+      .clock-container .control-btn {
         width: clamp(40px, 10vw, 48px);
         height: clamp(40px, 10vw, 48px);
       }
 
-      :root:fullscreen .clock-container .color-btn,
-      :root:-webkit-full-screen .clock-container .color-btn {
+      .clock-container .control-btn svg {
+        width: clamp(18px, 4.4vw, 21px);
+        height: clamp(18px, 4.4vw, 21px);
+      }
+
+      .clock-container .color-btn {
         width: clamp(24px, 6vw, 28px);
         height: clamp(24px, 6vw, 28px);
       }
