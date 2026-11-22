@@ -277,69 +277,28 @@
       }
     }
 
-    /* Windows / Desktop Default Screen: Significantly smaller than fullscreen */
+    /* Windows / Desktop Fullscreen: Placed last and scaled subtly below default view */
     @media (hover: hover) and (pointer: fine) {
-      .clock-container .time-main {
-        font-size: clamp(2.4rem, min(10.5vw, 22dvh), 7.5rem);
-      }
-
-      .clock-container .time-sub {
-        font-size: clamp(1.15rem, min(4.8vw, 9.5dvh), 3.2rem);
-      }
-
-      .clock-container .controls {
-        gap: clamp(0.7rem, 2.2vw, 1.15rem);
-        margin-top: clamp(0.45rem, 1.5dvh, 0.9rem);
-      }
-
-      .clock-container .control-btn {
-        width: clamp(38px, 4vw, 44px);
-        height: clamp(38px, 4vw, 44px);
-      }
-
-      .clock-container .control-btn svg {
-        width: clamp(17px, 1.8vw, 20px);
-        height: clamp(17px, 1.8vw, 20px);
-      }
-
-      .clock-container .color-btn {
-        width: clamp(20px, 2.2vw, 24px);
-        height: clamp(20px, 2.2vw, 24px);
-      }
-
-      /* Windows / Desktop Fullscreen: Larger than default screen */
       :root:fullscreen .clock-container .time-main,
       :root:-webkit-full-screen .clock-container .time-main {
-        font-size: clamp(4rem, min(16.5vw, 36dvh), 13rem);
+        font-size: clamp(3rem, min(14.5vw, 32dvh), 11.25rem);
       }
 
       :root:fullscreen .clock-container .time-sub,
       :root:-webkit-full-screen .clock-container .time-sub {
-        font-size: clamp(1.9rem, min(7.2vw, 15.5dvh), 5.2rem);
-      }
-
-      :root:fullscreen .clock-container .controls,
-      :root:-webkit-full-screen .clock-container .controls {
-        gap: clamp(0.95rem, 3vw, 1.5rem);
-        margin-top: clamp(0.6rem, 2dvh, 1.2rem);
+        font-size: clamp(1.45rem, min(6.4vw, 13.5dvh), 4.6rem);
       }
 
       :root:fullscreen .clock-container .control-btn,
       :root:-webkit-full-screen .clock-container .control-btn {
-        width: clamp(46px, 5vw, 56px);
-        height: clamp(46px, 5vw, 56px);
-      }
-
-      :root:fullscreen .clock-container .control-btn svg,
-      :root:-webkit-full-screen .clock-container .control-btn svg {
-        width: clamp(21px, 2.2vw, 25px);
-        height: clamp(21px, 2.2vw, 25px);
+        width: clamp(40px, 10vw, 48px);
+        height: clamp(40px, 10vw, 48px);
       }
 
       :root:fullscreen .clock-container .color-btn,
       :root:-webkit-full-screen .clock-container .color-btn {
-        width: clamp(26px, 2.8vw, 32px);
-        height: clamp(26px, 2.8vw, 32px);
+        width: clamp(24px, 6vw, 28px);
+        height: clamp(24px, 6vw, 28px);
       }
     }
   </style>
@@ -382,4 +341,227 @@
     <div class="color-controls" role="group" aria-label="Clock Color Selector">
       <button type="button" class="color-btn active" data-color="red" title="Red" aria-label="Red color"></button>
       <button type="button" class="color-btn" data-color="blue" title="Blue" aria-label="Blue color"></button>
-      <button type="button" class="color-
+      <button type="button" class="color-btn" data-color="green" title="Green" aria-label="Green color"></button>
+      <button type="button" class="color-btn" data-color="yellow" title="Yellow" aria-label="Yellow color"></button>
+      <button type="button" class="color-btn" data-color="white" title="White" aria-label="White color"></button>
+    </div>
+  </main>
+
+  <script>
+    // Anti-right-click / context menu guard
+    document.addEventListener('contextmenu', (event) => {
+      event.preventDefault();
+    });
+
+    // Disable pinch-in / pinch-out zoom while preserving vertical pull-to-refresh
+    document.addEventListener('touchstart', (event) => {
+      if (event.touches && event.touches.length > 1) {
+        event.preventDefault();
+      }
+    }, { passive: false });
+
+    document.addEventListener('touchmove', (event) => {
+      if (event.touches && event.touches.length > 1) {
+        event.preventDefault();
+      }
+    }, { passive: false });
+
+    ['gesturestart', 'gesturechange', 'gestureend'].forEach((gestureEvent) => {
+      document.addEventListener(gestureEvent, (event) => {
+        event.preventDefault();
+      }, { passive: false });
+    });
+
+    document.addEventListener('wheel', (event) => {
+      if (event.ctrlKey) {
+        event.preventDefault();
+      }
+    }, { passive: false });
+
+    // Clock updater
+    function updateClock() {
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      const hoursStr = String(hours).padStart(2, '0');
+
+      const tzPart = new Intl.DateTimeFormat('en-US', { timeZoneName: 'short' })
+        .formatToParts(now)
+        .find(part => part.type === 'timeZoneName');
+      const timeZone = tzPart ? tzPart.value : '';
+
+      document.getElementById('time-main').textContent = `${hoursStr}:${minutes}:${seconds}`;
+      document.getElementById('ampm').textContent = ampm;
+      document.getElementById('timezone').textContent = timeZone;
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Color themes: Red, Blue, Green, Yellow, White
+    const COLOR_THEMES = {
+      red: {
+        color: '#e53935',
+        glowStrong: 'rgba(229, 57, 53, 0.75)',
+        glowSoft: 'rgba(229, 57, 53, 0.25)',
+        btnBorder: 'rgba(229, 57, 53, 0.45)',
+        btnBg: 'rgba(229, 57, 53, 0.06)',
+        btnHoverBg: 'rgba(229, 57, 53, 0.18)',
+        btnHoverShadow: 'rgba(229, 57, 53, 0.35)'
+      },
+      blue: {
+        color: '#29b6f6',
+        glowStrong: 'rgba(41, 182, 246, 0.75)',
+        glowSoft: 'rgba(41, 182, 246, 0.25)',
+        btnBorder: 'rgba(41, 182, 246, 0.45)',
+        btnBg: 'rgba(41, 182, 246, 0.06)',
+        btnHoverBg: 'rgba(41, 182, 246, 0.18)',
+        btnHoverShadow: 'rgba(41, 182, 246, 0.35)'
+      },
+      green: {
+        color: '#00e676',
+        glowStrong: 'rgba(0, 230, 118, 0.75)',
+        glowSoft: 'rgba(0, 230, 118, 0.25)',
+        btnBorder: 'rgba(0, 230, 118, 0.45)',
+        btnBg: 'rgba(0, 230, 118, 0.06)',
+        btnHoverBg: 'rgba(0, 230, 118, 0.18)',
+        btnHoverShadow: 'rgba(0, 230, 118, 0.35)'
+      },
+      yellow: {
+        color: '#ffea00',
+        glowStrong: 'rgba(255, 234, 0, 0.75)',
+        glowSoft: 'rgba(255, 234, 0, 0.25)',
+        btnBorder: 'rgba(255, 234, 0, 0.45)',
+        btnBg: 'rgba(255, 234, 0, 0.06)',
+        btnHoverBg: 'rgba(255, 234, 0, 0.18)',
+        btnHoverShadow: 'rgba(255, 234, 0, 0.35)'
+      },
+      white: {
+        color: '#ffffff',
+        glowStrong: 'rgba(255, 255, 255, 0.75)',
+        glowSoft: 'rgba(255, 255, 255, 0.25)',
+        btnBorder: 'rgba(255, 255, 255, 0.45)',
+        btnBg: 'rgba(255, 255, 255, 0.06)',
+        btnHoverBg: 'rgba(255, 255, 255, 0.18)',
+        btnHoverShadow: 'rgba(255, 255, 255, 0.35)'
+      }
+    };
+
+    const colorButtons = document.querySelectorAll('.color-btn');
+
+    function applyColorTheme(themeKey) {
+      const theme = COLOR_THEMES[themeKey] || COLOR_THEMES.red;
+      const rootStyle = document.documentElement.style;
+
+      rootStyle.setProperty('--clock-color', theme.color);
+      rootStyle.setProperty('--clock-glow-strong', theme.glowStrong);
+      rootStyle.setProperty('--clock-glow-soft', theme.glowSoft);
+      rootStyle.setProperty('--btn-border', theme.btnBorder);
+      rootStyle.setProperty('--btn-bg', theme.btnBg);
+      rootStyle.setProperty('--btn-hover-bg', theme.btnHoverBg);
+      rootStyle.setProperty('--btn-hover-shadow', theme.btnHoverShadow);
+
+      colorButtons.forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.color === themeKey);
+      });
+
+      try {
+        localStorage.setItem('clockThemeColor', themeKey);
+      } catch (_) {}
+    }
+
+    colorButtons.forEach((btn) => {
+      btn.addEventListener('click', () => applyColorTheme(btn.dataset.color));
+    });
+
+    try {
+      const savedTheme = localStorage.getItem('clockThemeColor');
+      if (savedTheme && COLOR_THEMES[savedTheme]) {
+        applyColorTheme(savedTheme);
+      }
+    } catch (_) {}
+
+    // Fullscreen + Android Landscape Orientation Toggle
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    const fullscreenIcon = document.getElementById('fullscreen-icon');
+    const expandPath = 'M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3';
+    const compressPath = 'M4 14h6v6m10-10h-6V4m0 6l7-7M3 21l7-7';
+
+    function isCurrentlyFullscreen() {
+      return Boolean(
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement
+      );
+    }
+
+    async function enterFullscreenSafely() {
+      const docEl = document.documentElement;
+      const requestFn =
+        docEl.requestFullscreen ||
+        docEl.webkitRequestFullscreen ||
+        docEl.mozRequestFullScreen ||
+        docEl.msRequestFullscreen;
+
+      if (requestFn) {
+        await requestFn.call(docEl);
+      }
+
+      if (screen.orientation && typeof screen.orientation.lock === 'function') {
+        try {
+          await screen.orientation.lock('landscape');
+        } catch (_) {}
+      }
+    }
+
+    async function exitFullscreenSafely() {
+      if (screen.orientation && typeof screen.orientation.unlock === 'function') {
+        try {
+          screen.orientation.unlock();
+        } catch (_) {}
+      }
+
+      const exitFn =
+        document.exitFullscreen ||
+        document.webkitExitFullscreen ||
+        document.mozCancelFullScreen ||
+        document.msExitFullscreen;
+
+      if (exitFn) {
+        await exitFn.call(document);
+      }
+    }
+
+    async function toggleFullscreenLandscape() {
+      try {
+        if (!isCurrentlyFullscreen()) {
+          await enterFullscreenSafely();
+        } else {
+          await exitFullscreenSafely();
+        }
+      } catch (err) {
+        console.warn('Fullscreen toggle failed:', err);
+      } finally {
+        syncFullscreenIcon();
+      }
+    }
+
+    function syncFullscreenIcon() {
+      const active = isCurrentlyFullscreen();
+      fullscreenIcon.innerHTML = `<path d="${active ? compressPath : expandPath}" />`;
+    }
+
+    fullscreenBtn.addEventListener('click', toggleFullscreenLandscape);
+    document.addEventListener('fullscreenchange', syncFullscreenIcon);
+    document.addEventListener('webkitfullscreenchange', syncFullscreenIcon);
+    document.addEventListener('mozfullscreenchange', syncFullscreenIcon);
+    document.addEventListener('MSFullscreenChange', syncFullscreenIcon);
+  </script>
+</body>
+</html>
