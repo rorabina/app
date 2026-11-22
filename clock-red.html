@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Digital Clock</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dseg@0.46.0/css/dseg.css" />
   <style>
@@ -45,6 +45,7 @@
         max(clamp(0.75rem, 3vw, 2.5rem), env(safe-area-inset-left));
       overflow-x: hidden;
       overscroll-behavior-y: auto;
+      touch-action: pan-y;
       user-select: none;
       -webkit-user-select: none;
       -webkit-touch-callout: none;
@@ -227,51 +228,66 @@
       }
     }
 
-    /* Fullscreen Mode: Slightly smaller than normal + extra side clearance for Android camera punch hole */
-    :root:fullscreen body,
-    :root:-webkit-full-screen body {
-      padding-left: max(clamp(2.25rem, 5.5vw, 4rem), env(safe-area-inset-left));
-      padding-right: max(clamp(2.25rem, 5.5vw, 4rem), env(safe-area-inset-right));
-      overscroll-behavior-y: contain;
+    /* Windows / Desktop Fullscreen: Slightly smaller than default without shrinking awkwardly */
+    @media (hover: hover) and (pointer: fine) {
+      :root:fullscreen .time-main,
+      :root:-webkit-full-screen .time-main {
+        font-size: clamp(3.2rem, min(15.5vw, 34dvh), 12rem);
+      }
+
+      :root:fullscreen .time-sub,
+      :root:-webkit-full-screen .time-sub {
+        font-size: clamp(1.55rem, min(6.8vw, 14.5dvh), 4.9rem);
+      }
     }
 
-    :root:fullscreen .clock-container,
-    :root:-webkit-full-screen .clock-container {
-      gap: clamp(0.3rem, 1.4dvh, 0.9rem);
-    }
+    /* Android / Touch Fullscreen: Keep punch-hole clearance and slightly smaller scale */
+    @media (hover: none) and (pointer: coarse) {
+      :root:fullscreen body,
+      :root:-webkit-full-screen body {
+        padding-left: max(clamp(2.25rem, 5.5vw, 4rem), env(safe-area-inset-left));
+        padding-right: max(clamp(2.25rem, 5.5vw, 4rem), env(safe-area-inset-right));
+        overscroll-behavior-y: auto;
+      }
 
-    :root:fullscreen .time-main,
-    :root:-webkit-full-screen .time-main {
-      font-size: clamp(2.6rem, min(14vw, 31dvh), 11rem);
-    }
+      :root:fullscreen .clock-container,
+      :root:-webkit-full-screen .clock-container {
+        gap: clamp(0.3rem, 1.4dvh, 0.9rem);
+      }
 
-    :root:fullscreen .time-sub,
-    :root:-webkit-full-screen .time-sub {
-      font-size: clamp(1.35rem, min(6.2vw, 13dvh), 4.5rem);
-    }
+      :root:fullscreen .time-main,
+      :root:-webkit-full-screen .time-main {
+        font-size: clamp(2.6rem, min(14vw, 31dvh), 11rem);
+      }
 
-    :root:fullscreen .controls,
-    :root:-webkit-full-screen .controls {
-      gap: clamp(0.75rem, 3vw, 1.25rem);
-      margin-top: clamp(0.35rem, 1.4dvh, 0.85rem);
-    }
+      :root:fullscreen .time-sub,
+      :root:-webkit-full-screen .time-sub {
+        font-size: clamp(1.35rem, min(6.2vw, 13dvh), 4.5rem);
+      }
 
-    :root:fullscreen .control-btn,
-    :root:-webkit-full-screen .control-btn {
-      width: clamp(40px, 9.5vw, 48px);
-      height: clamp(40px, 9.5vw, 48px);
-    }
+      :root:fullscreen .controls,
+      :root:-webkit-full-screen .controls {
+        gap: clamp(0.75rem, 3vw, 1.25rem);
+        margin-top: clamp(0.35rem, 1.4dvh, 0.85rem);
+      }
 
-    :root:fullscreen .control-btn svg,
-    :root:-webkit-full-screen .control-btn svg {
-      width: clamp(18px, 4.4vw, 21px);
-      height: clamp(18px, 4.4vw, 21px);
-    }
+      :root:fullscreen .control-btn,
+      :root:-webkit-full-screen .control-btn {
+        width: clamp(40px, 9.5vw, 48px);
+        height: clamp(40px, 9.5vw, 48px);
+      }
 
-    :root:fullscreen .color-btn,
-    :root:-webkit-full-screen .color-btn {
-      width: clamp(22px, 5.5vw, 28px);
-      height: clamp(22px, 5.5vw, 28px);
+      :root:fullscreen .control-btn svg,
+      :root:-webkit-full-screen .control-btn svg {
+        width: clamp(18px, 4.4vw, 21px);
+        height: clamp(18px, 4.4vw, 21px);
+      }
+
+      :root:fullscreen .color-btn,
+      :root:-webkit-full-screen .color-btn {
+        width: clamp(22px, 5.5vw, 28px);
+        height: clamp(22px, 5.5vw, 28px);
+      }
     }
   </style>
 </head>
@@ -324,6 +340,31 @@
     document.addEventListener('contextmenu', (event) => {
       event.preventDefault();
     });
+
+    // Disable pinch-in / pinch-out zoom while preserving vertical pull-to-refresh
+    document.addEventListener('touchstart', (event) => {
+      if (event.touches && event.touches.length > 1) {
+        event.preventDefault();
+      }
+    }, { passive: false });
+
+    document.addEventListener('touchmove', (event) => {
+      if (event.touches && event.touches.length > 1) {
+        event.preventDefault();
+      }
+    }, { passive: false });
+
+    ['gesturestart', 'gesturechange', 'gestureend'].forEach((gestureEvent) => {
+      document.addEventListener(gestureEvent, (event) => {
+        event.preventDefault();
+      }, { passive: false });
+    });
+
+    document.addEventListener('wheel', (event) => {
+      if (event.ctrlKey) {
+        event.preventDefault();
+      }
+    }, { passive: false });
 
     // Clock updater
     function updateClock() {
@@ -463,9 +504,7 @@
       if (screen.orientation && typeof screen.orientation.lock === 'function') {
         try {
           await screen.orientation.lock('landscape');
-        } catch (_) {
-          // Some Android browsers/WebViews ignore programmatic orientation lock; user rotation still works
-        }
+        } catch (_) {}
       }
     }
 
