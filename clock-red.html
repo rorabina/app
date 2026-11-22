@@ -277,28 +277,69 @@
       }
     }
 
-    /* Windows / Desktop Fullscreen: Placed last and scaled subtly below default view */
+    /* Windows / Desktop Default Screen: Significantly smaller than fullscreen */
     @media (hover: hover) and (pointer: fine) {
+      .clock-container .time-main {
+        font-size: clamp(2.4rem, min(10.5vw, 22dvh), 7.5rem);
+      }
+
+      .clock-container .time-sub {
+        font-size: clamp(1.15rem, min(4.8vw, 9.5dvh), 3.2rem);
+      }
+
+      .clock-container .controls {
+        gap: clamp(0.7rem, 2.2vw, 1.15rem);
+        margin-top: clamp(0.45rem, 1.5dvh, 0.9rem);
+      }
+
+      .clock-container .control-btn {
+        width: clamp(38px, 4vw, 44px);
+        height: clamp(38px, 4vw, 44px);
+      }
+
+      .clock-container .control-btn svg {
+        width: clamp(17px, 1.8vw, 20px);
+        height: clamp(17px, 1.8vw, 20px);
+      }
+
+      .clock-container .color-btn {
+        width: clamp(20px, 2.2vw, 24px);
+        height: clamp(20px, 2.2vw, 24px);
+      }
+
+      /* Windows / Desktop Fullscreen: Larger than default screen */
       :root:fullscreen .clock-container .time-main,
       :root:-webkit-full-screen .clock-container .time-main {
-        font-size: clamp(3rem, min(14.5vw, 32dvh), 11.25rem);
+        font-size: clamp(4rem, min(16.5vw, 36dvh), 13rem);
       }
 
       :root:fullscreen .clock-container .time-sub,
       :root:-webkit-full-screen .clock-container .time-sub {
-        font-size: clamp(1.45rem, min(6.4vw, 13.5dvh), 4.6rem);
+        font-size: clamp(1.9rem, min(7.2vw, 15.5dvh), 5.2rem);
+      }
+
+      :root:fullscreen .clock-container .controls,
+      :root:-webkit-full-screen .clock-container .controls {
+        gap: clamp(0.95rem, 3vw, 1.5rem);
+        margin-top: clamp(0.6rem, 2dvh, 1.2rem);
       }
 
       :root:fullscreen .clock-container .control-btn,
       :root:-webkit-full-screen .clock-container .control-btn {
-        width: clamp(40px, 10vw, 48px);
-        height: clamp(40px, 10vw, 48px);
+        width: clamp(46px, 5vw, 56px);
+        height: clamp(46px, 5vw, 56px);
+      }
+
+      :root:fullscreen .clock-container .control-btn svg,
+      :root:-webkit-full-screen .clock-container .control-btn svg {
+        width: clamp(21px, 2.2vw, 25px);
+        height: clamp(21px, 2.2vw, 25px);
       }
 
       :root:fullscreen .clock-container .color-btn,
       :root:-webkit-full-screen .clock-container .color-btn {
-        width: clamp(24px, 6vw, 28px);
-        height: clamp(24px, 6vw, 28px);
+        width: clamp(26px, 2.8vw, 32px);
+        height: clamp(26px, 2.8vw, 32px);
       }
     }
   </style>
@@ -544,24 +585,3 @@
           await enterFullscreenSafely();
         } else {
           await exitFullscreenSafely();
-        }
-      } catch (err) {
-        console.warn('Fullscreen toggle failed:', err);
-      } finally {
-        syncFullscreenIcon();
-      }
-    }
-
-    function syncFullscreenIcon() {
-      const active = isCurrentlyFullscreen();
-      fullscreenIcon.innerHTML = `<path d="${active ? compressPath : expandPath}" />`;
-    }
-
-    fullscreenBtn.addEventListener('click', toggleFullscreenLandscape);
-    document.addEventListener('fullscreenchange', syncFullscreenIcon);
-    document.addEventListener('webkitfullscreenchange', syncFullscreenIcon);
-    document.addEventListener('mozfullscreenchange', syncFullscreenIcon);
-    document.addEventListener('MSFullscreenChange', syncFullscreenIcon);
-  </script>
-</body>
-</html>
