@@ -1,270 +1,329 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Clock (Red)</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dseg@0.46.0/css/dseg.css" />
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Clock (Red)</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dseg@0.46.0/css/dseg.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        html, body {
-            height: 100%;
-            width: 100%;
-        }
+    html, body {
+      height: 100%;
+      width: 100%;
+    }
 
-        body {
-            background-color: #000000;
-            color: #e53935;
-            font-family: 'DSEG7-Classic', 'Courier New', monospace;
-            font-style: normal;
-            font-weight: 900;
-            min-height: 100dvh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: clamp(0.75rem, 3dvh, 2rem) clamp(0.75rem, 3vw, 2.5rem);
-            overflow: hidden;
-            user-select: none;
-            -webkit-user-select: none;
-        }
+    body {
+      background-color: #000000;
+      color: #e53935;
+      font-family: 'DSEG7-Classic', 'Courier New', monospace;
+      font-style: normal;
+      font-weight: 900;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding:
+        max(clamp(0.75rem, 3dvh, 2rem), env(safe-area-inset-top))
+        max(clamp(0.75rem, 3vw, 2.5rem), env(safe-area-inset-right))
+        max(clamp(0.75rem, 3dvh, 2rem), env(safe-area-inset-bottom))
+        max(clamp(0.75rem, 3vw, 2.5rem), env(safe-area-inset-left));
+      overflow: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+    }
 
-        .clock-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            gap: clamp(0.5rem, 2dvh, 1.35rem);
-            width: 100%;
-            max-width: 100%;
-        }
+    .clock-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: clamp(0.5rem, 2dvh, 1.35rem);
+      width: 100%;
+      max-width: 100%;
+    }
 
-        /* Line 1: Main HH:MM:SS */
-        .time-main {
-            font-size: clamp(2.8rem, min(15.5vw, 15dvh), 10rem);
-            font-weight: 900;
-            font-style: normal;
-            letter-spacing: 0.06em;
-            line-height: 1.05;
-            white-space: nowrap;
-            text-shadow: 0 0 2px rgba(229, 57, 53, 0.75), 0 0 12px rgba(229, 57, 53, 0.25);
-        }
+    /* Line 1: Main HH:MM:SS */
+    .time-main {
+      font-size: clamp(2.8rem, min(15.5vw, 15dvh), 10rem);
+      font-weight: 900;
+      font-style: normal;
+      letter-spacing: 0.06em;
+      line-height: 1.05;
+      white-space: nowrap;
+      text-shadow:
+        0 0 2px rgba(229, 57, 53, 0.75),
+        0 0 12px rgba(229, 57, 53, 0.25);
+    }
 
-        /* Line 2: AM/PM + Time Zone */
-        .time-sub {
-            display: flex;
-            align-items: baseline;
-            justify-content: center;
-            gap: 0.65em;
-            font-family: 'DSEG14-Classic', 'Courier New', monospace;
-            font-size: clamp(1.5rem, min(7vw, 7dvh), 4.25rem);
-            font-weight: 900;
-            font-style: normal;
-            letter-spacing: 0.1em;
-            line-height: 1.15;
-            text-shadow: 0 0 1.5px rgba(229, 57, 53, 0.7), 0 0 9px rgba(229, 57, 53, 0.2);
-        }
+    /* Line 2: AM/PM + Time Zone */
+    .time-sub {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 0.65em;
+      font-family: 'DSEG14-Classic', 'Courier New', monospace;
+      font-size: clamp(1.5rem, min(7vw, 7dvh), 4.25rem);
+      font-weight: 900;
+      font-style: normal;
+      letter-spacing: 0.1em;
+      line-height: 1.15;
+      text-shadow:
+        0 0 1.5px rgba(229, 57, 53, 0.7),
+        0 0 9px rgba(229, 57, 53, 0.2);
+    }
 
-        .time-sub span {
-            font-size: inherit;
-            font-style: normal;
-            font-weight: 900;
-            text-shadow: inherit;
-        }
+    .time-sub span {
+      font-size: inherit;
+      font-style: normal;
+      font-weight: 900;
+      text-shadow: inherit;
+    }
 
-        /* Three Round Control Buttons */
-        .controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: clamp(1rem, 4vw, 1.75rem);
-            margin-top: clamp(0.65rem, 2.5dvh, 1.5rem);
-        }
+    /* Three Round Control Buttons */
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(1rem, 4vw, 1.75rem);
+      margin-top: clamp(0.65rem, 2.5dvh, 1.5rem);
+    }
 
-        .control-btn {
-            width: clamp(44px, 11vw, 54px);
-            height: clamp(44px, 11vw, 54px);
-            border-radius: 50%;
-            border: 1.5px solid rgba(229, 57, 53, 0.45);
-            background-color: rgba(229, 57, 53, 0.06);
-            color: #e53935;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            cursor: pointer;
-            outline: none;
-            transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
-            -webkit-tap-highlight-color: transparent;
-        }
+    .control-btn {
+      width: clamp(44px, 11vw, 54px);
+      height: clamp(44px, 11vw, 54px);
+      border-radius: 50%;
+      border: 1.5px solid rgba(229, 57, 53, 0.45);
+      background-color: rgba(229, 57, 53, 0.06);
+      color: #e53935;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      cursor: pointer;
+      outline: none;
+      transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.15s ease,
+        box-shadow 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-        .control-btn:hover,
-        .control-btn:focus-visible {
-            background-color: rgba(229, 57, 53, 0.18);
-            border-color: #e53935;
-            box-shadow: 0 0 12px rgba(229, 57, 53, 0.35);
-        }
+    .control-btn:hover,
+    .control-btn:focus-visible {
+      background-color: rgba(229, 57, 53, 0.18);
+      border-color: #e53935;
+      box-shadow: 0 0 12px rgba(229, 57, 53, 0.35);
+    }
 
-        .control-btn:active {
-            transform: scale(0.93);
-        }
+    .control-btn:active {
+      transform: scale(0.93);
+    }
 
-        .control-btn svg {
-            width: clamp(20px, 5vw, 24px);
-            height: clamp(20px, 5vw, 24px);
-            stroke: currentColor;
-            stroke-width: 2;
-            fill: none;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
+    .control-btn svg {
+      width: clamp(20px, 5vw, 24px);
+      height: clamp(20px, 5vw, 24px);
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
 
-        /* Landscape / Horizontal orientation: fill most of the display */
-        @media (orientation: landscape) {
-            body {
-                padding: clamp(0.5rem, 2dvh, 1.25rem) clamp(1rem, 3vw, 2.5rem);
-            }
-            .clock-container {
-                gap: clamp(0.35rem, 1.8dvh, 1.1rem);
-            }
-            .time-main {
-                font-size: clamp(3.5rem, min(17vw, 38dvh), 13.5rem);
-            }
-            .time-sub {
-                font-size: clamp(1.75rem, min(7.5vw, 16dvh), 5.5rem);
-            }
-            .controls {
-                margin-top: clamp(0.4rem, 1.8dvh, 1rem);
-            }
-        }
+    /* Landscape / Horizontal orientation: fill most of the display */
+    @media (orientation: landscape) {
+      body {
+        padding:
+          max(clamp(0.5rem, 2dvh, 1.25rem), env(safe-area-inset-top))
+          max(clamp(1rem, 3vw, 2.5rem), env(safe-area-inset-right))
+          max(clamp(0.5rem, 2dvh, 1.25rem), env(safe-area-inset-bottom))
+          max(clamp(1rem, 3vw, 2.5rem), env(safe-area-inset-left));
+      }
 
-        /* Portrait orientation */
-        @media (orientation: portrait) {
-            .time-main {
-                font-size: clamp(2.8rem, min(15.5vw, 13dvh), 8rem);
-            }
-            .time-sub {
-                font-size: clamp(1.5rem, min(7vw, 6dvh), 3.75rem);
-            }
-        }
-    </style>
+      .clock-container {
+        gap: clamp(0.35rem, 1.8dvh, 1.1rem);
+      }
+
+      .time-main {
+        font-size: clamp(3.5rem, min(17vw, 38dvh), 13.5rem);
+      }
+
+      .time-sub {
+        font-size: clamp(1.75rem, min(7.5vw, 16dvh), 5.5rem);
+      }
+
+      .controls {
+        margin-top: clamp(0.4rem, 1.8dvh, 1rem);
+      }
+    }
+
+    /* Portrait orientation */
+    @media (orientation: portrait) {
+      .time-main {
+        font-size: clamp(2.8rem, min(15.5vw, 13dvh), 8rem);
+      }
+
+      .time-sub {
+        font-size: clamp(1.5rem, min(7vw, 6dvh), 3.75rem);
+      }
+    }
+
+    /* Fullscreen Mode: Slightly scaled down + extra horizontal buffer for camera punch hole */
+    :fullscreen body,
+    :-webkit-full-screen body {
+      padding-left: max(clamp(2.25rem, 6vw, 4.5rem), env(safe-area-inset-left));
+      padding-right: max(clamp(2.25rem, 6vw, 4.5rem), env(safe-area-inset-right));
+    }
+
+    :fullscreen .clock-container,
+    :-webkit-full-screen .clock-container {
+      gap: clamp(0.3rem, 1.4dvh, 0.9rem);
+    }
+
+    :fullscreen .time-main,
+    :-webkit-full-screen .time-main {
+      font-size: clamp(2.4rem, min(14vw, 32dvh), 11rem);
+    }
+
+    :fullscreen .time-sub,
+    :-webkit-full-screen .time-sub {
+      font-size: clamp(1.25rem, min(6.2vw, 13.5dvh), 4.5rem);
+    }
+
+    :fullscreen .controls,
+    :-webkit-full-screen .controls {
+      gap: clamp(0.85rem, 3.2vw, 1.4rem);
+      margin-top: clamp(0.3rem, 1.4dvh, 0.85rem);
+    }
+
+    :fullscreen .control-btn,
+    :-webkit-full-screen .control-btn {
+      width: clamp(38px, 9vw, 46px);
+      height: clamp(38px, 9vw, 46px);
+    }
+
+    :fullscreen .control-btn svg,
+    :-webkit-full-screen .control-btn svg {
+      width: clamp(17px, 4.2vw, 21px);
+      height: clamp(17px, 4.2vw, 21px);
+    }
+  </style>
 </head>
 <body>
-    <main class="clock-container">
-        <div id="time-main" class="time-main">05:20:51</div>
-        <div class="time-sub">
-            <span id="ampm">AM</span>
-            <span id="timezone">GMT+8</span>
-        </div>
+  <main class="clock-container">
+    <div id="time-main" class="time-main">05:20:51</div>
+    <div class="time-sub">
+      <span id="ampm">AM</span>
+      <span id="timezone">GMT+8</span>
+    </div>
+    <nav class="controls" aria-label="Clock Controls">
+      <!-- 1. Home Icon -> Main Website -->
+      <a href="https://rorabina.github.io/" class="control-btn" title="Rorabina Home" aria-label="Rorabina Home">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V9.5z" />
+        </svg>
+      </a>
 
-        <nav class="controls" aria-label="Clock Controls">
-            <!-- 1. Home Icon -> Main Website -->
-            <a href="https://rorabina.github.io/" class="control-btn" title="Rorabina Home" aria-label="Rorabina Home">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V9.5z" />
-                </svg>
-            </a>
+      <!-- 2. Fullscreen + Landscape Lock Toggle -->
+      <button type="button" id="fullscreen-btn" class="control-btn" title="Toggle Fullscreen Landscape" aria-label="Toggle Fullscreen Landscape">
+        <svg id="fullscreen-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+        </svg>
+      </button>
 
-            <!-- 2. Fullscreen + Landscape Lock Toggle -->
-            <button type="button" id="fullscreen-btn" class="control-btn" title="Toggle Fullscreen Landscape" aria-label="Toggle Fullscreen Landscape">
-                <svg id="fullscreen-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
-                </svg>
-            </button>
+      <!-- 3. Back / Grid Icon -> Web Utilities -->
+      <a href="https://rorabina.github.io/web-utilities.html" class="control-btn" title="Web Utilities" aria-label="Web Utilities">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="3" width="7" height="7" rx="1.5" />
+          <rect x="14" y="3" width="7" height="7" rx="1.5" />
+          <rect x="3" y="14" width="7" height="7" rx="1.5" />
+          <rect x="14" y="14" width="7" height="7" rx="1.5" />
+        </svg>
+      </a>
+    </nav>
+  </main>
 
-            <!-- 3. Back / Grid Icon -> Web Utilities -->
-            <a href="https://rorabina.github.io/web-utilities.html" class="control-btn" title="Web Utilities" aria-label="Web Utilities">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <rect x="3" y="3" width="7" height="7" rx="1.5" />
-                    <rect x="14" y="3" width="7" height="7" rx="1.5" />
-                    <rect x="3" y="14" width="7" height="7" rx="1.5" />
-                    <rect x="14" y="14" width="7" height="7" rx="1.5" />
-                </svg>
-            </a>
-        </nav>
-    </main>
+  <script>
+    function updateClock() {
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
 
-    <script>
-        function updateClock() {
-            const now = new Date();
-            let hours = now.getHours();
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      const hoursStr = String(hours).padStart(2, '0');
 
-            hours = hours % 12;
-            hours = hours ? hours : 12;
-            const hoursStr = String(hours).padStart(2, '0');
+      const tzPart = new Intl.DateTimeFormat('en-US', { timeZoneName: 'short' })
+        .formatToParts(now)
+        .find(part => part.type === 'timeZoneName');
+      const timeZone = tzPart ? tzPart.value : '';
 
-            const tzPart = new Intl.DateTimeFormat('en-US', { timeZoneName: 'short' })
-                .formatToParts(now)
-                .find(part => part.type === 'timeZoneName');
-            const timeZone = tzPart ? tzPart.value : '';
+      document.getElementById('time-main').textContent = `${hoursStr}:${minutes}:${seconds}`;
+      document.getElementById('ampm').textContent = ampm;
+      document.getElementById('timezone').textContent = timeZone;
+    }
 
-            document.getElementById('time-main').textContent = `${hoursStr}:${minutes}:${seconds}`;
-            document.getElementById('ampm').textContent = ampm;
-            document.getElementById('timezone').textContent = timeZone;
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Fullscreen + Android Landscape Orientation Toggle
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    const fullscreenIcon = document.getElementById('fullscreen-icon');
+    const expandPath = 'M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3';
+    const compressPath = 'M4 14h6v6m10-10h-6V4m0 6l7-7M3 21l7-7';
+
+    async function toggleFullscreenLandscape() {
+      const docEl = document.documentElement;
+      const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+
+      if (!isFullscreen) {
+        try {
+          if (docEl.requestFullscreen) {
+            await docEl.requestFullscreen();
+          } else if (docEl.webkitRequestFullscreen) {
+            await docEl.webkitRequestFullscreen();
+          }
+
+          // Lock screen to horizontal/landscape on Android browsers
+          if (screen.orientation && screen.orientation.lock) {
+            await screen.orientation.lock('landscape').catch(() => {});
+          }
+        } catch (err) {
+          console.warn('Fullscreen request failed:', err);
         }
-
-        updateClock();
-        setInterval(updateClock, 1000);
-
-        // Fullscreen + Android Landscape Orientation Toggle
-        const fullscreenBtn = document.getElementById('fullscreen-btn');
-        const fullscreenIcon = document.getElementById('fullscreen-icon');
-
-        const expandPath = 'M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3';
-        const compressPath = 'M4 14h6v6m10-10h-6V4m0 6l7-7M3 21l7-7';
-
-        async function toggleFullscreenLandscape() {
-            const docEl = document.documentElement;
-            const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
-
-            if (!isFullscreen) {
-                try {
-                    if (docEl.requestFullscreen) {
-                        await docEl.requestFullscreen();
-                    } else if (docEl.webkitRequestFullscreen) {
-                        await docEl.webkitRequestFullscreen();
-                    }
-
-                    // Lock screen to horizontal/landscape on Android browsers
-                    if (screen.orientation && screen.orientation.lock) {
-                        await screen.orientation.lock('landscape').catch(() => {});
-                    }
-                } catch (err) {
-                    console.warn('Fullscreen request failed:', err);
-                }
-            } else {
-                try {
-                    if (screen.orientation && screen.orientation.unlock) {
-                        screen.orientation.unlock();
-                    }
-                    if (document.exitFullscreen) {
-                        await document.exitFullscreen();
-                    } else if (document.webkitExitFullscreen) {
-                        await document.webkitExitFullscreen();
-                    }
-                } catch (err) {
-                    console.warn('Exit fullscreen failed:', err);
-                }
-            }
+      } else {
+        try {
+          if (screen.orientation && screen.orientation.unlock) {
+            screen.orientation.unlock();
+          }
+          if (document.exitFullscreen) {
+            await document.exitFullscreen();
+          } else if (document.webkitExitFullscreen) {
+            await document.webkitExitFullscreen();
+          }
+        } catch (err) {
+          console.warn('Exit fullscreen failed:', err);
         }
+      }
+    }
 
-        function syncFullscreenIcon() {
-            const isFullscreen = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
-            fullscreenIcon.innerHTML = `<path d="${isFullscreen ? compressPath : expandPath}" />`;
-        }
+    function syncFullscreenIcon() {
+      const isFullscreen = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
+      fullscreenIcon.innerHTML = `<path d="${isFullscreen ? compressPath : expandPath}" />`;
+    }
 
-        fullscreenBtn.addEventListener('click', toggleFullscreenLandscape);
-        document.addEventListener('fullscreenchange', syncFullscreenIcon);
-        document.addEventListener('webkitfullscreenchange', syncFullscreenIcon);
-    </script>
+    fullscreenBtn.addEventListener('click', toggleFullscreenLandscape);
+    document.addEventListener('fullscreenchange', syncFullscreenIcon);
+    document.addEventListener('webkitfullscreenchange', syncFullscreenIcon);
+  </script>
 </body>
 </html>
