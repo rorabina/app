@@ -28,7 +28,7 @@
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
-      padding: clamp(0.75rem, 2.5dvh, 1.5rem) 1rem;
+      padding: clamp(0.6rem, 2dvh, 1.5rem) clamp(0.75rem, 2.5vw, 2rem);
     }
 
     .clock-container {
@@ -38,14 +38,14 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      gap: clamp(0.4rem, 1.3dvh, 0.95rem);
+      gap: clamp(0.45rem, 1.5dvh, 1.25rem);
       width: 100%;
       max-width: 100%;
     }
 
-    /* Line 1: Thicker, bold, upright HH:MM:SS */
+    /* Line 1: Larger HH:MM:SS */
     .time-main {
-      font-size: clamp(2rem, min(11.5vw, 10.5dvh), 7.5rem);
+      font-size: clamp(2.8rem, min(14.5vw, 13dvh), 9rem);
       font-weight: 900;
       font-style: normal;
       letter-spacing: 0.06em;
@@ -53,24 +53,24 @@
       white-space: nowrap;
       text-shadow:
         0 0 2px rgba(229, 57, 53, 0.75),
-        0 0 10px rgba(229, 57, 53, 0.25);
+        0 0 12px rgba(229, 57, 53, 0.25);
     }
 
-    /* Line 2: Thicker, bold, upright AM/PM + Time Zone at matching size */
+    /* Line 2: Larger AM/PM + Time Zone at matching size */
     .time-sub {
       display: flex;
       align-items: baseline;
       justify-content: center;
-      gap: 0.6em;
+      gap: 0.65em;
       font-family: 'DSEG14-Classic', 'Courier New', monospace;
-      font-size: clamp(1.15rem, min(5.2vw, 4.6dvh), 3.2rem);
+      font-size: clamp(1.5rem, min(6.5vw, 6dvh), 4rem);
       font-weight: 900;
       font-style: normal;
       letter-spacing: 0.1em;
       line-height: 1.15;
       text-shadow:
         0 0 1.5px rgba(229, 57, 53, 0.7),
-        0 0 8px rgba(229, 57, 53, 0.2);
+        0 0 9px rgba(229, 57, 53, 0.2);
     }
 
     .time-sub span {
@@ -80,15 +80,44 @@
       text-shadow: inherit;
     }
 
-    /* Larger, legible footer that stays inside the dynamic viewport */
+    /* Landscape / Horizontal orientation: fill most of the display */
+    @media (orientation: landscape) {
+      body {
+        padding: clamp(0.5rem, 2dvh, 1.25rem) clamp(1rem, 3vw, 2.5rem);
+      }
+
+      .clock-container {
+        gap: clamp(0.4rem, 2dvh, 1.25rem);
+      }
+
+      .time-main {
+        font-size: clamp(3.5rem, min(16.5vw, 36dvh), 13rem);
+      }
+
+      .time-sub {
+        font-size: clamp(1.75rem, min(7.5vw, 16dvh), 5.5rem);
+      }
+    }
+
+    /* Portrait orientation: keep generous size while preserving room for footer */
+    @media (orientation: portrait) {
+      .time-main {
+        font-size: clamp(2.8rem, min(14.5vw, 11.5dvh), 7.5rem);
+      }
+
+      .time-sub {
+        font-size: clamp(1.5rem, min(6.5vw, 5.2dvh), 3.5rem);
+      }
+    }
+
     footer {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       font-style: normal;
       font-weight: 400;
       color: #9e9e9e;
-      font-size: clamp(0.875rem, 2.5vw, 1rem);
+      font-size: clamp(0.85rem, 2.4vw, 1rem);
       text-align: center;
-      line-height: 1.5;
+      line-height: 1.45;
       flex-shrink: 0;
       padding-bottom: env(safe-area-inset-bottom, 0px);
     }
@@ -113,7 +142,7 @@
 <body>
 
   <main class="clock-container">
-    <div id="time-main" class="time-main">05:11:48</div>
+    <div id="time-main" class="time-main">05:20:51</div>
     <div class="time-sub">
       <span id="ampm">AM</span>
       <span id="timezone">GMT+8</span>
