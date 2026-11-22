@@ -228,19 +228,6 @@
       }
     }
 
-    /* Windows / Desktop Fullscreen: Slightly smaller than default without shrinking awkwardly */
-    @media (hover: hover) and (pointer: fine) {
-      :root:fullscreen .time-main,
-      :root:-webkit-full-screen .time-main {
-        font-size: clamp(3.2rem, min(15.5vw, 34dvh), 12rem);
-      }
-
-      :root:fullscreen .time-sub,
-      :root:-webkit-full-screen .time-sub {
-        font-size: clamp(1.55rem, min(6.8vw, 14.5dvh), 4.9rem);
-      }
-    }
-
     /* Android / Touch Fullscreen: Keep punch-hole clearance and slightly smaller scale */
     @media (hover: none) and (pointer: coarse) {
       :root:fullscreen body,
@@ -287,6 +274,31 @@
       :root:-webkit-full-screen .color-btn {
         width: clamp(22px, 5.5vw, 28px);
         height: clamp(22px, 5.5vw, 28px);
+      }
+    }
+
+    /* Windows / Desktop Fullscreen: Placed last and scaled subtly below default view */
+    @media (hover: hover) and (pointer: fine) {
+      :root:fullscreen .clock-container .time-main,
+      :root:-webkit-full-screen .clock-container .time-main {
+        font-size: clamp(3rem, min(14.5vw, 32dvh), 11.25rem);
+      }
+
+      :root:fullscreen .clock-container .time-sub,
+      :root:-webkit-full-screen .clock-container .time-sub {
+        font-size: clamp(1.45rem, min(6.4vw, 13.5dvh), 4.6rem);
+      }
+
+      :root:fullscreen .clock-container .control-btn,
+      :root:-webkit-full-screen .clock-container .control-btn {
+        width: clamp(40px, 10vw, 48px);
+        height: clamp(40px, 10vw, 48px);
+      }
+
+      :root:fullscreen .clock-container .color-btn,
+      :root:-webkit-full-screen .clock-container .color-btn {
+        width: clamp(24px, 6vw, 28px);
+        height: clamp(24px, 6vw, 28px);
       }
     }
   </style>
