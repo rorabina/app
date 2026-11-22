@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dseg@0.46.0/css/dseg.css" />
   <style>
     :root {
+      --bg: #000000;
       --c: #e53935;
       --glow-strong: rgba(229, 57, 53, 0.75);
       --glow-soft: rgba(229, 57, 53, 0.25);
@@ -14,13 +15,21 @@
       --btn-bg: rgba(229, 57, 53, 0.06);
       --btn-hover: rgba(229, 57, 53, 0.18);
       --btn-shadow: rgba(229, 57, 53, 0.35);
+      --swatch-ring: rgba(255, 255, 255, 0.35);
+      --swatch-hover-ring: #ffffff;
+    }
+
+    body.light-mode {
+      --bg: #ffffff;
+      --swatch-ring: rgba(0, 0, 0, 0.28);
+      --swatch-hover-ring: #000000;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { min-height: 100%; width: 100%; }
 
     body {
-      background: #000;
+      background: var(--bg);
       color: var(--c);
       font-family: 'DSEG7-Classic', 'Courier New', monospace;
       font-weight: 900;
@@ -37,6 +46,7 @@
       overscroll-behavior-y: auto;
       touch-action: pan-y;
       user-select: none;
+      transition: background-color 0.2s ease, color 0.2s ease;
     }
 
     .clock-container {
@@ -58,11 +68,12 @@
 
     .time-sub {
       display: flex;
+      flex-wrap: wrap;
       align-items: baseline;
       justify-content: center;
       gap: 0.65em;
       font-family: 'DSEG14-Classic', 'Courier New', monospace;
-      font-size: clamp(1.5rem, min(7vw, 7dvh), 4.25rem);
+      font-size: clamp(1.2rem, min(5.5vw, 6dvh), 3.4rem);
       letter-spacing: 0.1em;
       line-height: 1.15;
       text-shadow: 0 0 1.5px var(--glow-strong), 0 0 9px var(--glow-soft);
@@ -73,7 +84,7 @@
       flex-wrap: wrap;
       align-items: center;
       justify-content: center;
-      gap: clamp(0.85rem, 3.5vw, 1.5rem);
+      gap: clamp(0.65rem, 2.5vw, 1.25rem);
       margin-top: clamp(0.65rem, 2.5dvh, 1.5rem);
     }
 
@@ -89,6 +100,10 @@
       justify-content: center;
       text-decoration: none;
       cursor: pointer;
+      font-family: inherit;
+      font-weight: 900;
+      font-size: clamp(0.75rem, 2.2vw, 0.9rem);
+      letter-spacing: 0.02em;
       transition: background-color 0.2s, border-color 0.2s, transform 0.15s, box-shadow 0.2s;
     }
 
@@ -112,26 +127,26 @@
 
     .color-toggle-btn {
       background: var(--c);
-      border-color: rgba(255, 255, 255, 0.35);
+      border-color: var(--swatch-ring);
       box-shadow: 0 0 10px var(--glow-soft);
     }
 
     .color-toggle-btn:hover, .color-toggle-btn:focus-visible {
       background: var(--c);
-      border-color: #fff;
+      border-color: var(--swatch-hover-ring);
       box-shadow: 0 0 14px var(--glow-strong);
     }
 
     @media (orientation: landscape) {
       .clock-container { gap: clamp(0.35rem, 1.8dvh, 1.1rem); }
       .time-main { font-size: clamp(3.5rem, min(17vw, 38dvh), 13.5rem); }
-      .time-sub { font-size: clamp(1.75rem, min(7.5vw, 16dvh), 5.5rem); }
+      .time-sub { font-size: clamp(1.35rem, min(5.8vw, 13dvh), 4.2rem); }
       .controls { margin-top: clamp(0.4rem, 1.8dvh, 1rem); }
     }
 
     @media (orientation: portrait) {
       .time-main { font-size: clamp(2.8rem, min(15.5vw, 13dvh), 8rem); }
-      .time-sub { font-size: clamp(1.5rem, min(7vw, 6dvh), 3.75rem); }
+      .time-sub { font-size: clamp(1.15rem, min(5.2vw, 5.2dvh), 3rem); }
     }
 
     @media (hover: none) and (pointer: coarse) {
@@ -140,7 +155,7 @@
         padding-right: max(clamp(2.25rem, 5.5vw, 4rem), env(safe-area-inset-right));
       }
       :root:fullscreen .time-main { font-size: clamp(2.6rem, min(14vw, 31dvh), 11rem); }
-      :root:fullscreen .time-sub { font-size: clamp(1.35rem, min(6.2vw, 13dvh), 4.5rem); }
+      :root:fullscreen .time-sub { font-size: clamp(1.15rem, min(5vw, 11dvh), 3.6rem); }
       :root:fullscreen .control-btn { width: clamp(40px, 9.5vw, 48px); height: clamp(40px, 9.5vw, 48px); }
       :root:fullscreen .control-btn svg { width: clamp(18px, 4.4vw, 21px); height: clamp(18px, 4.4vw, 21px); }
     }
@@ -148,7 +163,7 @@
     /* Windows / Desktop: Default and Fullscreen consistent smaller scale */
     @media (hover: hover) and (pointer: fine) {
       .time-main { font-size: clamp(3rem, min(14.5vw, 32dvh), 11.25rem); }
-      .time-sub { font-size: clamp(1.45rem, min(6.4vw, 13.5dvh), 4.6rem); }
+      .time-sub { font-size: clamp(1.25rem, min(5.2vw, 11.5dvh), 3.75rem); }
       .control-btn { width: clamp(40px, 10vw, 48px); height: clamp(40px, 10vw, 48px); }
       .control-btn svg { width: clamp(18px, 4.4vw, 21px); height: clamp(18px, 4.4vw, 21px); }
     }
@@ -160,6 +175,7 @@
     <div class="time-sub">
       <span id="ampm">AM</span>
       <span id="timezone">GMT+8</span>
+      <span id="date-display">11-23-26</span>
     </div>
 
     <nav class="controls" aria-label="Clock Controls">
@@ -173,6 +189,13 @@
         </svg>
       </a>
       <button type="button" id="color-toggle-btn" class="control-btn color-toggle-btn" title="Cycle Clock Color (Red)" aria-label="Cycle Clock Color"></button>
+      <button type="button" id="theme-mode-btn" class="control-btn" title="Toggle Light / Dark Mode" aria-label="Toggle Light or Dark Mode">
+        <svg id="theme-mode-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41" />
+        </svg>
+      </button>
+      <button type="button" id="hour-format-btn" class="control-btn" title="Toggle 12H / 24H Format" aria-label="Toggle 12-hour or 24-hour format">12H</button>
       <button type="button" id="fullscreen-btn" class="control-btn" title="Toggle Fullscreen Landscape" aria-label="Toggle Fullscreen Landscape">
         <svg id="fullscreen-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" /></svg>
       </button>
@@ -188,37 +211,73 @@
       }, { passive: false });
     });
 
+    const hourBtn = document.getElementById('hour-format-btn');
+    let is24Hour = false;
+
     const updateClock = () => {
       const now = new Date();
-      let h = now.getHours();
+      const rawH = now.getHours();
       const m = String(now.getMinutes()).padStart(2, '0');
       const s = String(now.getSeconds()).padStart(2, '0');
-      const ampm = h >= 12 ? 'PM' : 'AM';
-      h = String((h % 12) || 12).padStart(2, '0');
+      const ampmEl = document.getElementById('ampm');
+
+      let hStr;
+      if (is24Hour) {
+        hStr = String(rawH).padStart(2, '0');
+        ampmEl.textContent = '';
+        ampmEl.style.display = 'none';
+      } else {
+        ampmEl.style.display = '';
+        ampmEl.textContent = rawH >= 12 ? 'PM' : 'AM';
+        hStr = String((rawH % 12) || 12).padStart(2, '0');
+      }
+
       const tz = new Intl.DateTimeFormat('en-US', { timeZoneName: 'short' })
         .formatToParts(now).find((p) => p.type === 'timeZoneName')?.value || '';
 
-      document.getElementById('time-main').textContent = `${h}:${m}:${s}`;
-      document.getElementById('ampm').textContent = ampm;
-      document.getElementById('timezone').textContent = tz;
-    };
-    updateClock();
-    setInterval(updateClock, 1000);
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const dd = String(now.getDate()).padStart(2, '0');
+      const yy = String(now.getFullYear()).slice(-2);
 
-    const THEME_ORDER = ['red', 'blue', 'green', 'yellow', 'white'];
-    const THEMES = {
+      document.getElementById('time-main').textContent = `${hStr}:${m}:${s}`;
+      document.getElementById('timezone').textContent = tz;
+      document.getElementById('date-display').textContent = `${mm}-${dd}-${yy}`;
+    };
+
+    const applyHourFormat = (use24) => {
+      is24Hour = Boolean(use24);
+      hourBtn.textContent = is24Hour ? '24H' : '12H';
+      hourBtn.title = is24Hour ? 'Switch to 12-Hour Format' : 'Switch to 24-Hour Format';
+      try { localStorage.setItem('clockIs24Hour', String(is24Hour)); } catch (_) {}
+      updateClock();
+    };
+
+    hourBtn.addEventListener('click', () => applyHourFormat(!is24Hour));
+
+    const BASE_COLORS = {
       red:    ['#e53935', '229, 57, 53', 'Red'],
       blue:   ['#29b6f6', '41, 182, 246', 'Blue'],
       green:  ['#00e676', '0, 230, 118', 'Green'],
       yellow: ['#ffea00', '255, 234, 0', 'Yellow'],
-      white:  ['#ffffff', '255, 255, 255', 'White']
+      white:  ['#ffffff', '255, 255, 255', 'White'],
+      black:  ['#000000', '0, 0, 0', 'Black']
     };
+
     const colorToggleBtn = document.getElementById('color-toggle-btn');
+    const themeModeBtn = document.getElementById('theme-mode-btn');
+    const themeModeIcon = document.getElementById('theme-mode-icon');
+    const sunSvg = '<circle cx="12" cy="12" r="4" /><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41" />';
+    const moonSvg = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />';
+
+    let isLightMode = false;
     let currentColorKey = 'red';
 
+    const getCycleOrder = () => ['red', 'blue', 'green', 'yellow', isLightMode ? 'black' : 'white'];
+
     const applyTheme = (key) => {
-      currentColorKey = THEMES[key] ? key : 'red';
-      const [hex, rgb, label] = THEMES[currentColorKey];
+      const order = getCycleOrder();
+      currentColorKey = order.includes(key) ? key : order[0];
+      const [hex, rgb, label] = BASE_COLORS[currentColorKey];
       const st = document.documentElement.style;
       st.setProperty('--c', hex);
       st.setProperty('--glow-strong', `rgba(${rgb}, 0.75)`);
@@ -232,15 +291,44 @@
       try { localStorage.setItem('clockThemeColor', currentColorKey); } catch (_) {}
     };
 
+    const applyLightMode = (light) => {
+      isLightMode = Boolean(light);
+      document.body.classList.toggle('light-mode', isLightMode);
+      themeModeIcon.innerHTML = isLightMode ? moonSvg : sunSvg;
+      themeModeBtn.title = isLightMode ? 'Switch to Dark Mode' : 'Switch to Light Mode';
+
+      if (isLightMode && currentColorKey === 'white') {
+        currentColorKey = 'black';
+      } else if (!isLightMode && currentColorKey === 'black') {
+        currentColorKey = 'white';
+      }
+
+      applyTheme(currentColorKey);
+      try { localStorage.setItem('clockLightMode', String(isLightMode)); } catch (_) {}
+    };
+
     colorToggleBtn.addEventListener('click', () => {
-      const nextIndex = (THEME_ORDER.indexOf(currentColorKey) + 1) % THEME_ORDER.length;
-      applyTheme(THEME_ORDER[nextIndex]);
+      const order = getCycleOrder();
+      const idx = order.indexOf(currentColorKey);
+      applyTheme(order[(idx + 1) % order.length]);
     });
 
+    themeModeBtn.addEventListener('click', () => applyLightMode(!isLightMode));
+
     try {
-      const saved = localStorage.getItem('clockThemeColor');
-      if (saved && THEMES[saved]) applyTheme(saved);
-    } catch (_) {}
+      const savedLight = localStorage.getItem('clockLightMode') === 'true';
+      const savedColor = localStorage.getItem('clockThemeColor');
+      const saved24 = localStorage.getItem('clockIs24Hour') === 'true';
+      if (savedColor && BASE_COLORS[savedColor]) currentColorKey = savedColor;
+      applyLightMode(savedLight);
+      applyHourFormat(saved24);
+    } catch (_) {
+      applyTheme('red');
+      applyHourFormat(false);
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
 
     const fsBtn = document.getElementById('fullscreen-btn');
     const fsIcon = document.getElementById('fullscreen-icon');
