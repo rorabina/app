@@ -26,6 +26,9 @@
             flex-direction: column;
             justify-content: space-between;
             box-sizing: border-box;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .main-container {
@@ -34,117 +37,120 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
+            padding: 16px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
-        /* Segmented calculator display container */
-        #live-clock {
-            font-family: 'DS-Digital', monospace, sans-serif;
-            font-size: clamp(3.5rem, 12vw, 7.5rem);
-            font-weight: bold;
-            text-align: center;
-            color: var(--text-color);
+        .clock-wrapper {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
+            gap: clamp(8px, 2vh, 18px);
+            max-width: 100%;
+        }
+
+        /* Line 1: Main HH:MM:SS digits scaled for tight displays */
+        .time-primary {
+            font-family: 'DS-Digital', monospace;
+            font-size: clamp(3.5rem, 18vw, 13rem);
+            font-weight: bold;
+            line-height: 0.95;
+            letter-spacing: 0.03em;
             white-space: nowrap;
-        }
-
-        /* Force each character into a uniform fixed-width slot so '1' never shifts */
-        #live-clock .char-slot {
-            display: inline-block;
             text-align: center;
-            width: 0.6em; /* Uniform slot width for all digits and symbols */
+            text-shadow: 0 0 18px rgba(224, 76, 62, 0.25);
         }
 
-        /* Wider slot specifically for spaces between time and AM/PM/PST */
-        #live-clock .char-slot.space {
-            width: 0.3em;
+        /* Line 2: Dedicated AM/PM + Time Zone row for tight screens */
+        .time-meta {
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
+            justify-content: center;
+            gap: clamp(10px, 3vw, 24px);
+            flex-wrap: wrap;
+        }
+
+        .ampm {
+            font-family: 'DS-Digital', monospace;
+            font-size: clamp(1.75rem, 6.5vw, 4rem);
+            font-weight: bold;
+            letter-spacing: 0.08em;
+            line-height: 1;
+            text-shadow: 0 0 12px rgba(224, 76, 62, 0.2);
+        }
+
+        .timezone {
+            font-family: 'DS-Digital', monospace;
+            font-size: clamp(1.25rem, 4.5vw, 2.75rem);
+            letter-spacing: 0.08em;
+            line-height: 1;
+            opacity: 0.85;
+            text-transform: uppercase;
         }
 
         footer {
             width: 100%;
-            padding: 15px 20px;
-            padding-bottom: calc(15px + env(safe-area-inset-bottom));
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.9rem;
-            border-top: none; 
-            background-color: var(--bg-color); 
-            box-sizing: border-box;
-            color: var(--footer-color);
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 20px;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .footer-links a {
-            color: var(--footer-color);
-            text-decoration: none;
-            opacity: 0.85;
-            transition: opacity 0.2s;
-        }
-
-        .footer-links a:hover {
-            opacity: 1;
-            text-decoration: underline;
-        }
-
-        .copyright {
-            color: var(--footer-color);
-            opacity: 0.75;
             text-align: center;
+            padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+            font-size: clamp(0.7rem, 2vw, 0.85rem);
+            color: var(--footer-color);
+            letter-spacing: 0.05em;
+            box-sizing: border-box;
         }
     </style>
 </head>
 <body>
+    <main class="main-container">
+        <div class="clock-wrapper" role="timer" aria-live="off">
+            <div class="time-primary" id="clock-time">00:00:00</div>
+            <div class="time-meta">
+                <span class="ampm" id="clock-ampm">AM</span>
+                <span class="timezone" id="clock-tz">UTC+8</span>
+            </div>
+        </div>
+    </main>
 
-    <div class="main-container">
-        <!-- Live Segmented Digital Clock with Fixed-Width Character Slots -->
-        <div id="live-clock">Loading clock...</div>
-    </div>
-
-    <footer>
-        <ul class="footer-links">
-            <li><a href="https://rorabina.github.io/">Home</a></li>
-            <li><a href="https://rorabina.github.io/web-utilities.html">Web Utilities</a></li>
-        </ul>
-        <div class="copyright">&copy; Copyright 2026 Republic of Rabina - All Rights Reserved</div>
-    </footer>
+    <footer id="clock-footer">Rorabina Clock</footer>
 
     <script>
-        (function() {
-            function updateClock() {
-                const now = new Date();
-                const options = { 
-                    timeZone: "Asia/Manila", 
-                    hour: "2-digit", 
-                    minute: "2-digit", 
-                    second: "2-digit", 
-                    hour12: true 
-                };
-                const timeStr = new Intl.DateTimeFormat("en-US", options).format(now) + " PST";
-                const el = document.getElementById("live-clock");
-                if (el) {
-                    // Wrap every character in a fixed-width span slot to prevent shifting
-                    el.innerHTML = timeStr.split('').map(char => {
-                        const isSpace = char === ' ';
-                        const cssClass = isSpace ? 'char-slot space' : 'char-slot';
-                        const displayChar = isSpace ? '&nbsp;' : char;
-                        return `<span class="${cssClass}">${displayChar}</span>`;
-                    }).join('');
-                }
-            }
-            setInterval(updateClock, 1000);
-            updateClock();
-        })();
+        function getTimeZoneLabel(date) {
+            try {
+                const shortTz = new Intl.DateTimeFormat('en-US', { timeZoneName: 'short' })
+                    .formatToParts(date)
+                    .find(part => part.type === 'timeZoneName')?.value;
+                if (shortTz) return shortTz;
+            } catch (e) {}
+
+            const offsetMinutes = -date.getTimezoneOffset();
+            const sign = offsetMinutes >= 0 ? '+' : '-';
+            const absHours = Math.floor(Math.abs(offsetMinutes) / 60);
+            const absMins = Math.abs(offsetMinutes) % 60;
+            return absMins === 0
+                ? `UTC${sign}${absHours}`
+                : `UTC${sign}${absHours}:${String(absMins).padStart(2, '0')}`;
+        }
+
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            const formattedHours = String(hours).padStart(2, '0');
+
+            document.getElementById('clock-time').textContent = `${formattedHours}:${minutes}:${seconds}`;
+            document.getElementById('clock-ampm').textContent = ampm;
+            document.getElementById('clock-tz').textContent = getTimeZoneLabel(now);
+        }
+
+        updateClock();
+        setInterval(updateClock, 250);
     </script>
 </body>
 </html>
