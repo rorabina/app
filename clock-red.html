@@ -1,156 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Clock (Red)</title>
-    <link rel="manifest" href="manifest.json">
-    <!-- Import authentic segmented digital watch/calculator font from external stylesheet -->
-    <link href="https://fonts.cdnfonts.com/css/ds-digital" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #000000;
-            --text-color: #e04c3e;
-            --footer-color: #a6a99c;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clock (Red)</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dseg@0.46.0/css/dseg.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-sizing: border-box;
-            overflow: hidden;
-            user-select: none;
-            -webkit-user-select: none;
-        }
+    body {
+      background-color: #000000;
+      color: #e53935;
+      font-family: 'DSEG7-Classic', 'Courier New', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem;
+    }
 
-        .main-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            width: 100%;
-            box-sizing: border-box;
-        }
+    .clock-container {
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 1rem;
+      width: 100%;
+    }
 
-        .clock-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: clamp(8px, 2vh, 18px);
-            max-width: 100%;
-        }
+    /* Line 1: HH:MM:SS */
+    .time-main {
+      font-size: clamp(2.5rem, 13vw, 7.5rem);
+      font-weight: bold;
+      font-style: italic;
+      letter-spacing: 0.06em;
+      line-height: 1.1;
+      white-space: nowrap;
+    }
 
-        /* Line 1: Main HH:MM:SS digits scaled for tight displays */
-        .time-primary {
-            font-family: 'DS-Digital', monospace;
-            font-size: clamp(3.5rem, 18vw, 13rem);
-            font-weight: bold;
-            line-height: 0.95;
-            letter-spacing: 0.03em;
-            white-space: nowrap;
-            text-align: center;
-            text-shadow: 0 0 18px rgba(224, 76, 62, 0.25);
-        }
+    /* Line 2: Unified size & style for both AM/PM and Time Zone */
+    .time-sub {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 0.6em;
+      font-family: 'DSEG14-Classic', 'Courier New', monospace;
+      font-size: clamp(1.4rem, 5.5vw, 3.2rem);
+      font-weight: bold;
+      font-style: italic;
+      letter-spacing: 0.1em;
+      line-height: 1.2;
+    }
 
-        /* Line 2: Dedicated AM/PM + Time Zone row for tight screens */
-        .time-meta {
-            display: flex;
-            flex-direction: row;
-            align-items: baseline;
-            justify-content: center;
-            gap: clamp(10px, 3vw, 24px);
-            flex-wrap: wrap;
-        }
+    /* Ensure child spans inherit exact same font size and style */
+    .time-sub span {
+      font-size: inherit;
+      font-style: inherit;
+      font-weight: inherit;
+    }
 
-        .ampm {
-            font-family: 'DS-Digital', monospace;
-            font-size: clamp(1.75rem, 6.5vw, 4rem);
-            font-weight: bold;
-            letter-spacing: 0.08em;
-            line-height: 1;
-            text-shadow: 0 0 12px rgba(224, 76, 62, 0.2);
-        }
-
-        .timezone {
-            font-family: 'DS-Digital', monospace;
-            font-size: clamp(1.25rem, 4.5vw, 2.75rem);
-            letter-spacing: 0.08em;
-            line-height: 1;
-            opacity: 0.85;
-            text-transform: uppercase;
-        }
-
-        footer {
-            width: 100%;
-            text-align: center;
-            padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
-            font-size: clamp(0.7rem, 2vw, 0.85rem);
-            color: var(--footer-color);
-            letter-spacing: 0.05em;
-            box-sizing: border-box;
-        }
-    </style>
+    footer {
+      font-family: system-ui, -apple-system, sans-serif;
+      color: #9e9e9e;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-    <main class="main-container">
-        <div class="clock-wrapper" role="timer" aria-live="off">
-            <div class="time-primary" id="clock-time">00:00:00</div>
-            <div class="time-meta">
-                <span class="ampm" id="clock-ampm">AM</span>
-                <span class="timezone" id="clock-tz">UTC+8</span>
-            </div>
-        </div>
-    </main>
 
-    <footer id="clock-footer">Rorabina Clock</footer>
+  <main class="clock-container">
+    <div id="time-main" class="time-main">04:53:12</div>
+    <div class="time-sub">
+      <span id="ampm">AM</span>
+      <span id="timezone">GMT+8</span>
+    </div>
+  </main>
 
-    <script>
-        function getTimeZoneLabel(date) {
-            try {
-                const shortTz = new Intl.DateTimeFormat('en-US', { timeZoneName: 'short' })
-                    .formatToParts(date)
-                    .find(part => part.type === 'timeZoneName')?.value;
-                if (shortTz) return shortTz;
-            } catch (e) {}
+  <footer>
+    <div>Rorabina Clock</div>
+  </footer>
 
-            const offsetMinutes = -date.getTimezoneOffset();
-            const sign = offsetMinutes >= 0 ? '+' : '-';
-            const absHours = Math.floor(Math.abs(offsetMinutes) / 60);
-            const absMins = Math.abs(offsetMinutes) % 60;
-            return absMins === 0
-                ? `UTC${sign}${absHours}`
-                : `UTC${sign}${absHours}:${String(absMins).padStart(2, '0')}`;
-        }
+  <script>
+    function updateClock() {
+      const now = new Date();
 
-        function updateClock() {
-            const now = new Date();
-            let hours = now.getHours();
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            const ampm = hours >= 12 ? 'PM' : 'AM';
+      let hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
 
-            hours = hours % 12;
-            hours = hours ? hours : 12;
-            const formattedHours = String(hours).padStart(2, '0');
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      const hoursStr = String(hours).padStart(2, '0');
 
-            document.getElementById('clock-time').textContent = `${formattedHours}:${minutes}:${seconds}`;
-            document.getElementById('clock-ampm').textContent = ampm;
-            document.getElementById('clock-tz').textContent = getTimeZoneLabel(now);
-        }
+      const tzPart = new Intl.DateTimeFormat('en-US', { timeZoneName: 'short' })
+        .formatToParts(now)
+        .find(part => part.type === 'timeZoneName');
+      const timeZone = tzPart ? tzPart.value : '';
 
-        updateClock();
-        setInterval(updateClock, 250);
-    </script>
+      document.getElementById('time-main').textContent = `${hoursStr}:${minutes}:${seconds}`;
+      document.getElementById('ampm').textContent = ampm;
+      document.getElementById('timezone').textContent = timeZone;
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
 </body>
 </html>
