@@ -68,14 +68,11 @@
       text-shadow: 0 0 1.5px var(--glow-strong), 0 0 9px var(--glow-soft);
     }
 
-    .controls, .color-controls {
+    .controls {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: center;
-    }
-
-    .controls {
       gap: clamp(0.85rem, 3.5vw, 1.5rem);
       margin-top: clamp(0.65rem, 2.5dvh, 1.5rem);
     }
@@ -113,29 +110,17 @@
       stroke-linejoin: round;
     }
 
-    .color-controls {
-      gap: clamp(0.65rem, 2.5vw, 1.1rem);
-      margin-top: clamp(0.45rem, 1.6dvh, 0.9rem);
+    .color-toggle-btn {
+      background: var(--c);
+      border-color: rgba(255, 255, 255, 0.35);
+      box-shadow: 0 0 10px var(--glow-soft);
     }
 
-    .color-btn {
-      width: clamp(26px, 6.5vw, 32px);
-      height: clamp(26px, 6.5vw, 32px);
-      border-radius: 50%;
-      border: 2px solid rgba(255, 255, 255, 0.28);
-      background: var(--swatch);
-      cursor: pointer;
-      transition: transform 0.15s, border-color 0.2s, box-shadow 0.2s;
+    .color-toggle-btn:hover, .color-toggle-btn:focus-visible {
+      background: var(--c);
+      border-color: #fff;
+      box-shadow: 0 0 14px var(--glow-strong);
     }
-
-    .color-btn:hover, .color-btn:focus-visible { transform: scale(1.08); border-color: #fff; }
-    .color-btn.active { border-color: #fff; box-shadow: 0 0 10px var(--swatch); transform: scale(1.12); }
-
-    .color-btn[data-color="red"]    { --swatch: #e53935; }
-    .color-btn[data-color="blue"]   { --swatch: #29b6f6; }
-    .color-btn[data-color="green"]  { --swatch: #00e676; }
-    .color-btn[data-color="yellow"] { --swatch: #ffea00; }
-    .color-btn[data-color="white"]  { --swatch: #ffffff; }
 
     @media (orientation: landscape) {
       .clock-container { gap: clamp(0.35rem, 1.8dvh, 1.1rem); }
@@ -158,7 +143,6 @@
       :root:fullscreen .time-sub { font-size: clamp(1.35rem, min(6.2vw, 13dvh), 4.5rem); }
       :root:fullscreen .control-btn { width: clamp(40px, 9.5vw, 48px); height: clamp(40px, 9.5vw, 48px); }
       :root:fullscreen .control-btn svg { width: clamp(18px, 4.4vw, 21px); height: clamp(18px, 4.4vw, 21px); }
-      :root:fullscreen .color-btn { width: clamp(22px, 5.5vw, 28px); height: clamp(22px, 5.5vw, 28px); }
     }
 
     /* Windows / Desktop: Default and Fullscreen consistent smaller scale */
@@ -167,7 +151,6 @@
       .time-sub { font-size: clamp(1.45rem, min(6.4vw, 13.5dvh), 4.6rem); }
       .control-btn { width: clamp(40px, 10vw, 48px); height: clamp(40px, 10vw, 48px); }
       .control-btn svg { width: clamp(18px, 4.4vw, 21px); height: clamp(18px, 4.4vw, 21px); }
-      .color-btn { width: clamp(24px, 6vw, 28px); height: clamp(24px, 6vw, 28px); }
     }
   </style>
 </head>
@@ -183,24 +166,17 @@
       <a href="https://rorabina.github.io/" class="control-btn" title="Rorabina Home" aria-label="Rorabina Home">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V9.5z" /></svg>
       </a>
-      <button type="button" id="fullscreen-btn" class="control-btn" title="Toggle Fullscreen Landscape" aria-label="Toggle Fullscreen Landscape">
-        <svg id="fullscreen-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" /></svg>
-      </button>
       <a href="https://rorabina.github.io/web-utilities.html" class="control-btn" title="Web Utilities" aria-label="Web Utilities">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" />
           <rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" />
         </svg>
       </a>
+      <button type="button" id="color-toggle-btn" class="control-btn color-toggle-btn" title="Cycle Clock Color (Red)" aria-label="Cycle Clock Color"></button>
+      <button type="button" id="fullscreen-btn" class="control-btn" title="Toggle Fullscreen Landscape" aria-label="Toggle Fullscreen Landscape">
+        <svg id="fullscreen-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" /></svg>
+      </button>
     </nav>
-
-    <div class="color-controls" role="group" aria-label="Clock Color Selector">
-      <button type="button" class="color-btn active" data-color="red" title="Red" aria-label="Red color"></button>
-      <button type="button" class="color-btn" data-color="blue" title="Blue" aria-label="Blue color"></button>
-      <button type="button" class="color-btn" data-color="green" title="Green" aria-label="Green color"></button>
-      <button type="button" class="color-btn" data-color="yellow" title="Yellow" aria-label="Yellow color"></button>
-      <button type="button" class="color-btn" data-color="white" title="White" aria-label="White color"></button>
-    </div>
   </main>
 
   <script>
@@ -229,17 +205,20 @@
     updateClock();
     setInterval(updateClock, 1000);
 
+    const THEME_ORDER = ['red', 'blue', 'green', 'yellow', 'white'];
     const THEMES = {
-      red:    ['#e53935', '229, 57, 53'],
-      blue:   ['#29b6f6', '41, 182, 246'],
-      green:  ['#00e676', '0, 230, 118'],
-      yellow: ['#ffea00', '255, 234, 0'],
-      white:  ['#ffffff', '255, 255, 255']
+      red:    ['#e53935', '229, 57, 53', 'Red'],
+      blue:   ['#29b6f6', '41, 182, 246', 'Blue'],
+      green:  ['#00e676', '0, 230, 118', 'Green'],
+      yellow: ['#ffea00', '255, 234, 0', 'Yellow'],
+      white:  ['#ffffff', '255, 255, 255', 'White']
     };
-    const colorBtns = document.querySelectorAll('.color-btn');
+    const colorToggleBtn = document.getElementById('color-toggle-btn');
+    let currentColorKey = 'red';
 
     const applyTheme = (key) => {
-      const [hex, rgb] = THEMES[key] || THEMES.red;
+      currentColorKey = THEMES[key] ? key : 'red';
+      const [hex, rgb, label] = THEMES[currentColorKey];
       const st = document.documentElement.style;
       st.setProperty('--c', hex);
       st.setProperty('--glow-strong', `rgba(${rgb}, 0.75)`);
@@ -248,11 +227,16 @@
       st.setProperty('--btn-bg', `rgba(${rgb}, 0.06)`);
       st.setProperty('--btn-hover', `rgba(${rgb}, 0.18)`);
       st.setProperty('--btn-shadow', `rgba(${rgb}, 0.35)`);
-      colorBtns.forEach((b) => b.classList.toggle('active', b.dataset.color === key));
-      try { localStorage.setItem('clockThemeColor', key); } catch (_) {}
+      colorToggleBtn.title = `Cycle Clock Color (${label})`;
+      colorToggleBtn.setAttribute('aria-label', `Cycle Clock Color (Current: ${label})`);
+      try { localStorage.setItem('clockThemeColor', currentColorKey); } catch (_) {}
     };
 
-    colorBtns.forEach((b) => b.addEventListener('click', () => applyTheme(b.dataset.color)));
+    colorToggleBtn.addEventListener('click', () => {
+      const nextIndex = (THEME_ORDER.indexOf(currentColorKey) + 1) % THEME_ORDER.length;
+      applyTheme(THEME_ORDER[nextIndex]);
+    });
+
     try {
       const saved = localStorage.getItem('clockThemeColor');
       if (saved && THEMES[saved]) applyTheme(saved);
