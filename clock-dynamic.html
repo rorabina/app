@@ -23,6 +23,8 @@
       --bg: #ffffff;
       --swatch-ring: rgba(0, 0, 0, 0.45);
       --swatch-hover-ring: #000000;
+      --glow-strong: rgba(0, 0, 0, 0.35);
+      --glow-soft: rgba(0, 0, 0, 0.12);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -44,6 +46,9 @@
                max(clamp(0.75rem, 3vw, 2.5rem), env(safe-area-inset-left));
       overflow-x: hidden;
       user-select: none;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-synthesis-weight: none;
     }
 
     .clock-container {
@@ -282,9 +287,11 @@
       currentColorKey = order.includes(key) ? key : 'red';
       const [hex, rgb, label] = BASE_COLORS[currentColorKey];
       const st = document.documentElement.style;
+      const strongAlpha = isLightMode ? 0.35 : 0.75;
+      const softAlpha = isLightMode ? 0.12 : 0.25;
       st.setProperty('--c', hex);
-      st.setProperty('--glow-strong', `rgba(${rgb}, 0.75)`);
-      st.setProperty('--glow-soft', `rgba(${rgb}, 0.25)`);
+      st.setProperty('--glow-strong', `rgba(${rgb}, ${strongAlpha})`);
+      st.setProperty('--glow-soft', `rgba(${rgb}, ${softAlpha})`);
       st.setProperty('--btn-border', `rgba(${rgb}, 0.45)`);
       st.setProperty('--btn-bg', `rgba(${rgb}, 0.06)`);
       st.setProperty('--btn-hover', `rgba(${rgb}, 0.18)`);
