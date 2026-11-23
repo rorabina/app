@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Digital Clock</title>
+  <title>Rabina Times</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dseg@0.46.0/css/dseg.css" />
   <style>
     :root {
@@ -49,6 +49,21 @@
       transition: background-color 0.2s ease, color 0.2s ease;
     }
 
+    .brand-tag {
+      position: fixed;
+      top: max(clamp(0.65rem, 2.2dvh, 1.35rem), env(safe-area-inset-top));
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      font-size: clamp(0.65rem, 1.6vw, 0.8rem);
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      opacity: 0.48;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
     .clock-container {
       display: flex;
       flex-direction: column;
@@ -67,8 +82,8 @@
     }
 
     .time-sub {
-      display: flex;
-      flex-wrap: wrap;
+      display: inline-flex;
+      flex-wrap: nowrap;
       align-items: baseline;
       justify-content: center;
       gap: 0.65em;
@@ -76,7 +91,18 @@
       font-size: clamp(1.2rem, min(5.5vw, 6dvh), 3.4rem);
       letter-spacing: 0.1em;
       line-height: 1.15;
+      white-space: nowrap;
       text-shadow: 0 0 1.5px var(--glow-strong), 0 0 9px var(--glow-soft);
+    }
+
+    #ampm {
+      display: inline-block;
+      min-width: 2.2ch;
+      text-align: center;
+    }
+
+    #ampm.is-hidden {
+      visibility: hidden;
     }
 
     .time-sub .seg-num {
@@ -176,6 +202,8 @@
   </style>
 </head>
 <body>
+  <header class="brand-tag" aria-hidden="true">Rabina Times</header>
+
   <main class="clock-container">
     <div id="time-main" class="time-main">05:20:51</div>
     <div class="time-sub">
@@ -230,10 +258,10 @@
       let hStr;
       if (is24Hour) {
         hStr = String(rawH).padStart(2, '0');
-        ampmEl.textContent = '';
-        ampmEl.style.display = 'none';
+        ampmEl.textContent = 'AM';
+        ampmEl.classList.add('is-hidden');
       } else {
-        ampmEl.style.display = '';
+        ampmEl.classList.remove('is-hidden');
         ampmEl.textContent = rawH >= 12 ? 'PM' : 'AM';
         hStr = String((rawH % 12) || 12).padStart(2, '0');
       }
