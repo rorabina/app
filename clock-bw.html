@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Rabina Times</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dseg@0.46.0/css/dseg.css" />
+  <style>
+    :root {
+      --bg: #000000;
+      --c: #ffffff;
+      --glow-strong: rgba(255, 255, 255, 0.72);
+      --glow-soft: rgba(255, 255, 255, 0.22);
+      --btn-border: rgba(255, 255, 255, 0.42);
+      --btn-bg: rgba(255, 255, 255, 0.06);
+      --btn-hover: rgba(255, 255, 255, 0.18);
+      --btn-shadow: rgba(255, 255, 255, 0.3);
+    }
+
+    body.light-mode {
+      --bg: #ffffff;
+      --c: #000000;
+      --glow-strong: rgba(0, 0, 0, 0.35);
+      --glow-soft: rgba(0, 0, 0, 0.12);
+      --btn-border: rgba(0, 0, 0, 0.38);
+      --btn-bg: rgba(0, 0, 0, 0.05);
+      --btn-hover: rgba(0, 0, 0, 0.14);
+      --btn-shadow: rgba(0, 0, 0, 0.22);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100%; width: 100%; }
+
+    body {
+      background: var(--bg);
+      color: var(--c);
+      font-family: 'DSEG7-Classic', 'Courier New', monospace;
+      font-weight: 900;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: max(clamp(0.75rem, 3dvh, 2rem), env(safe-area-inset-top))
+               max(clamp(0.75rem, 3vw, 2.5rem), env(safe-area-inset-right))
+               max(clamp(0.75rem, 3dvh, 2rem), env(safe-area-inset-bottom))
+               max(clamp(0.75rem, 3vw, 2.5rem), env(safe-area-inset-left));
+      overflow-x: hidden;
+      user-select: none;
+    }
+
+    .clock-container {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: clamp(0.5rem, 2dvh, 1.35rem);
+      width: fit-content;
+      max-width: 100%;
+    }
+
+    .brand-tag {
+      align-self: center;
+      text-align: center;
+      margin-bottom: -0.4rem;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      font-size: clamp(0.82rem, 1.85vw, 1.05rem);
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      opacity: 0.58;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .time-main {
+      font-size: clamp(2.8rem, min(15.5vw, 15dvh), 10rem);
+      letter-spacing: 0.06em;
+      line-height: 1.05;
+      white-space: nowrap;
+      text-shadow: 0 0 2px var(--glow-strong), 0 0 12px var(--glow-soft);
+    }
+
+    .time-sub {
+      display: inline-flex;
+      flex-wrap: nowrap;
+      align-items: baseline;
+      justify-content: center;
+      gap: 0.65em;
+      font-family: 'DSEG14-Classic', 'Courier New', monospace;
+      font-size: clamp(1.2rem, min(5.5vw, 6dvh), 3.4rem);
+      letter-spacing: 0.1em;
+      line-height: 1.15;
+      white-space: nowrap;
+      text-shadow: 0 0 1.5px var(--glow-strong), 0 0 9px var(--glow-soft);
+    }
+
+    #ampm {
+      display: inline-block;
+      min-width: 2.2ch;
+      text-align: center;
+    }
+
+    #ampm.is-hidden { visibility: hidden; }
+
+    .time-sub .seg-num {
+      font-family: 'DSEG7-Classic', 'Courier New', monospace;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(0.65rem, 2.5vw, 1.25rem);
+      margin-top: clamp(0.65rem, 2.5dvh, 1.5rem);
+    }
+
+    .control-btn {
+      width: clamp(44px, 11vw, 54px);
+      height: clamp(44px, 11vw, 54px);
+      border-radius: 50%;
+      border: 1.5px solid var(--btn-border);
+      background: var(--btn-bg);
+      color: var(--c);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 900;
+      font-size: clamp(0.75rem, 2.2vw, 0.9rem);
+      transition: background-color 0.2s, border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+
+    .control-btn:hover {
+      background: var(--btn-hover);
+      border-color: var(--c);
+      box-shadow: 0 0 12px var(--btn-shadow);
+    }
+
+    .control-btn:active { transform: scale(0.93); }
+
+    .control-btn svg {
+      width: clamp(20px, 5vw, 24px);
+      height: clamp(20px, 5vw, 24px);
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    @media (orientation: landscape) {
+      .time-main { font-size: clamp(3.5rem, min(17vw, 38dvh), 13.5rem); }
+      .time-sub { font-size: clamp(1.35rem, min(5.8vw, 13dvh), 4.2rem); }
+    }
+
+    @media (hover: none) and (pointer: coarse) {
+      :root:fullscreen body {
+        padding-left: max(clamp(2.25rem, 5.5vw, 4rem), env(safe-area-inset-left));
+        padding-right: max(clamp(2.25rem, 5.5vw, 4rem), env(safe-area-inset-right));
+      }
+      :root:fullscreen .clock-container { gap: clamp(0.3rem, 1.4dvh, 0.9rem); }
+      :root:fullscreen .time-main { font-size: clamp(2.6rem, min(14vw, 31dvh), 11rem); }
+      :root:fullscreen .time-sub { font-size: clamp(1.15rem, min(5vw, 11dvh), 3.6rem); }
+      :root:fullscreen .controls { gap: clamp(0.75rem, 3vw, 1.25rem); margin-top: clamp(0.35rem, 1.4dvh, 0.85rem); }
+      :root:fullscreen .control-btn { width: clamp(40px, 9.5vw, 48px); height: clamp(40px, 9.5vw, 48px); }
+      :root:fullscreen .control-btn svg { width: clamp(18px, 4.4vw, 21px); height: clamp(18px, 4.4vw, 21px); }
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .time-main { font-size: clamp(3rem, min(14.5vw, 32dvh), 11.25rem); }
+      .time-sub { font-size: clamp(1.25rem, min(5.2vw, 11.5dvh), 3.75rem); }
+      .control-btn { width: clamp(40px, 10vw, 48px); height: clamp(40px, 10vw, 48px); }
+      .control-btn svg { width: clamp(18px, 4.4vw, 21px); height: clamp(18px, 4.4vw, 21px); }
+    }
+  </style>
+</head>
+<body>
+  <main class="clock-container">
+    <span class="brand-tag" aria-hidden="true">Rabina Times</span>
+    <div id="time-main" class="time-main">12:00:00</div>
+    <div class="time-sub">
+      <span id="ampm">AM</span>
+      <span id="timezone">GMT+<span class="seg-num">8</span></span>
+      <span id="date-display" class="seg-num">11-23-26</span>
+    </div>
+
+    <nav class="controls" aria-label="Clock Controls">
+      <a href="https://rorabina.github.io/" class="control-btn" title="Rorabina Home" aria-label="Rorabina Home">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V9.5z" /></svg>
+      </a>
+      <a href="https://rorabina.github.io/web-utilities.html" class="control-btn" title="Web Utilities" aria-label="Web Utilities">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" />
+          <rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" />
+        </svg>
+      </a>
+      <button type="button" id="theme-mode-btn" class="control-btn" title="Toggle Light / Dark Mode" aria-label="Toggle Light or Dark Mode">
+        <svg id="theme-mode-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41" />
+        </svg>
+      </button>
+      <button type="button" id="hour-format-btn" class="control-btn" title="Toggle 12H / 24H Format" aria-label="Toggle 12-hour or 24-hour format">12H</button>
+      <button type="button" id="fullscreen-btn" class="control-btn" title="Toggle Fullscreen Landscape" aria-label="Toggle Fullscreen Landscape">
+        <svg id="fullscreen-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" /></svg>
+      </button>
+    </nav>
+  </main>
+
+  <script>
+    const hourBtn = document.getElementById('hour-format-btn');
+    let is24Hour = false;
+
+    const updateClock = () => {
+      const now = new Date();
+      const rawH = now.getHours();
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      const ampmEl = document.getElementById('ampm');
+
+      let hStr;
+      if (is24Hour) {
+        hStr = String(rawH).padStart(2, '0');
+        ampmEl.classList.add('is-hidden');
+      } else {
+        ampmEl.classList.remove('is-hidden');
+        ampmEl.textContent = rawH >= 12 ? 'PM' : 'AM';
+        hStr = String((rawH % 12) || 12).padStart(2, '0');
+      }
+
+      const rawTz = new Intl.DateTimeFormat('en-US', { timeZoneName: 'short' })
+        .formatToParts(now).find((p) => p.type === 'timeZoneName')?.value || '';
+      const tzMatch = rawTz.match(/^(.*?)([+-]?\d+(?::\d+)?)$/);
+      const tzEl = document.getElementById('timezone');
+      tzEl.innerHTML = tzMatch ? `${tzMatch[1]}<span class="seg-num">${tzMatch[2]}</span>` : rawTz;
+
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const dd = String(now.getDate()).padStart(2, '0');
+      const yy = String(now.getFullYear()).slice(-2);
+
+      document.getElementById('time-main').textContent = `${hStr}:${m}:${s}`;
+      document.getElementById('date-display').textContent = `${mm}-${dd}-${yy}`;
+    };
+
+    const applyHourFormat = (use24) => {
+      is24Hour = Boolean(use24);
+      hourBtn.textContent = is24Hour ? '24H' : '12H';
+      try { localStorage.setItem('clockIs24Hour', String(is24Hour)); } catch (_) {}
+      updateClock();
+    };
+    hourBtn.addEventListener('click', () => applyHourFormat(!is24Hour));
+
+    const themeModeBtn = document.getElementById('theme-mode-btn');
+    const themeModeIcon = document.getElementById('theme-mode-icon');
+    const sunSvg = '<circle cx="12" cy="12" r="4" /><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41" />';
+    const moonSvg = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />';
+    let isLightMode = false;
+
+    const applyLightMode = (light) => {
+      isLightMode = Boolean(light);
+      document.body.classList.toggle('light-mode', isLightMode);
+      themeModeIcon.innerHTML = isLightMode ? moonSvg : sunSvg;
+      try { localStorage.setItem('clockLightMode', String(isLightMode)); } catch (_) {}
+    };
+    themeModeBtn.addEventListener('click', () => applyLightMode(!isLightMode));
+
+    try {
+      applyLightMode(localStorage.getItem('clockLightMode') === 'true');
+      applyHourFormat(localStorage.getItem('clockIs24Hour') === 'true');
+    } catch (_) {
+      applyLightMode(false);
+      applyHourFormat(false);
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    const fsBtn = document.getElementById('fullscreen-btn');
+    const fsIcon = document.getElementById('fullscreen-icon');
+    const expandPath = 'M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3';
+    const compressPath = 'M4 14h6v6m10-10h-6V4m0 6l7-7M3 21l7-7';
+    const syncFs = () => { fsIcon.innerHTML = `<path d="${document.fullscreenElement ? compressPath : expandPath}" />`; };
+
+    fsBtn.addEventListener('click', async () => {
+      try {
+        if (!document.fullscreenElement) {
+          await document.documentElement.requestFullscreen?.();
+          try { await screen.orientation?.lock?.('landscape'); } catch (_) {}
+        } else {
+          try { screen.orientation?.unlock?.(); } catch (_) {}
+          await document.exitFullscreen?.();
+        }
+      } catch (_) {}
+      finally { syncFs(); }
+    });
+    document.addEventListener('fullscreenchange', syncFs);
+  </script>
+</body>
+</html>
