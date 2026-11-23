@@ -58,11 +58,12 @@
 
     .brand-tag {
       align-self: flex-start;
-      margin-bottom: -0.25rem;
+      padding-left: 0.12em;
+      margin-bottom: -0.45rem;
       font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      font-size: clamp(0.65rem, 1.6vw, 0.8rem);
+      font-size: clamp(0.6rem, 1.35vw, 0.75rem);
       font-weight: 600;
-      letter-spacing: 0.16em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       opacity: 0.55;
       pointer-events: none;
@@ -153,6 +154,19 @@
     @media (orientation: landscape) {
       .time-main { font-size: clamp(3.5rem, min(17vw, 38dvh), 13.5rem); }
       .time-sub { font-size: clamp(1.35rem, min(5.8vw, 13dvh), 4.2rem); }
+    }
+
+    @media (hover: none) and (pointer: coarse) {
+      :root:fullscreen body {
+        padding-left: max(clamp(2.25rem, 5.5vw, 4rem), env(safe-area-inset-left));
+        padding-right: max(clamp(2.25rem, 5.5vw, 4rem), env(safe-area-inset-right));
+      }
+      :root:fullscreen .clock-container { gap: clamp(0.3rem, 1.4dvh, 0.9rem); }
+      :root:fullscreen .time-main { font-size: clamp(2.6rem, min(14vw, 31dvh), 11rem); }
+      :root:fullscreen .time-sub { font-size: clamp(1.15rem, min(5vw, 11dvh), 3.6rem); }
+      :root:fullscreen .controls { gap: clamp(0.75rem, 3vw, 1.25rem); margin-top: clamp(0.35rem, 1.4dvh, 0.85rem); }
+      :root:fullscreen .control-btn { width: clamp(40px, 9.5vw, 48px); height: clamp(40px, 9.5vw, 48px); }
+      :root:fullscreen .control-btn svg { width: clamp(18px, 4.4vw, 21px); height: clamp(18px, 4.4vw, 21px); }
     }
 
     @media (hover: hover) and (pointer: fine) {
