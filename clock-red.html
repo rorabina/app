@@ -79,6 +79,12 @@
       text-shadow: 0 0 1.5px var(--glow-strong), 0 0 9px var(--glow-soft);
     }
 
+    .time-sub .seg-num {
+      font-family: 'DSEG7-Classic', 'Courier New', monospace;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+    }
+
     .controls {
       display: flex;
       flex-wrap: wrap;
@@ -174,8 +180,8 @@
     <div id="time-main" class="time-main">05:20:51</div>
     <div class="time-sub">
       <span id="ampm">AM</span>
-      <span id="timezone">GMT+8</span>
-      <span id="date-display">11-23-26</span>
+      <span id="timezone">GMT+<span class="seg-num">8</span></span>
+      <span id="date-display" class="seg-num">11-23-26</span>
     </div>
 
     <nav class="controls" aria-label="Clock Controls">
@@ -232,15 +238,21 @@
         hStr = String((rawH % 12) || 12).padStart(2, '0');
       }
 
-      const tz = new Intl.DateTimeFormat('en-US', { timeZoneName: 'short' })
+      const rawTz = new Intl.DateTimeFormat('en-US', { timeZoneName: 'short' })
         .formatToParts(now).find((p) => p.type === 'timeZoneName')?.value || '';
+      const tzMatch = rawTz.match(/^(.*?)([+-]?\d+(?::\d+)?)$/);
+      const tzEl = document.getElementById('timezone');
+      if (tzMatch) {
+        tzEl.innerHTML = `${tzMatch[1]}<span class="seg-num">${tzMatch[2]}</span>`;
+      } else {
+        tzEl.textContent = rawTz;
+      }
 
       const mm = String(now.getMonth() + 1).padStart(2, '0');
       const dd = String(now.getDate()).padStart(2, '0');
       const yy = String(now.getFullYear()).slice(-2);
 
       document.getElementById('time-main').textContent = `${hStr}:${m}:${s}`;
-      document.getElementById('timezone').textContent = tz;
       document.getElementById('date-display').textContent = `${mm}-${dd}-${yy}`;
     };
 
