@@ -15,14 +15,10 @@
       --btn-bg: rgba(229, 57, 53, 0.06);
       --btn-hover: rgba(229, 57, 53, 0.18);
       --btn-shadow: rgba(229, 57, 53, 0.35);
-      --swatch-ring: rgba(255, 255, 255, 0.45);
-      --swatch-hover-ring: #ffffff;
     }
 
     body.light-mode {
       --bg: #ffffff;
-      --swatch-ring: rgba(0, 0, 0, 0.45);
-      --swatch-hover-ring: #000000;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -130,10 +126,15 @@
       font-family: inherit;
       font-weight: 900;
       font-size: clamp(0.75rem, 2.2vw, 0.9rem);
-      transition: background-color 0.2s, border-color 0.2s, transform 0.15s;
+      transition: background-color 0.2s, border-color 0.2s, transform 0.15s, box-shadow 0.2s;
     }
 
-    .control-btn:hover { background: var(--btn-hover); border-color: var(--c); }
+    .control-btn:hover {
+      background: var(--btn-hover);
+      border-color: var(--c);
+      box-shadow: 0 0 12px var(--btn-shadow);
+    }
+
     .control-btn:active { transform: scale(0.93); }
 
     .control-btn svg {
@@ -144,15 +145,6 @@
       fill: none;
       stroke-linecap: round;
       stroke-linejoin: round;
-    }
-
-    .color-toggle-btn {
-      background: var(--c);
-      border: 1.5px solid var(--swatch-ring);
-    }
-
-    .color-toggle-btn:hover {
-      border-color: var(--swatch-hover-ring);
     }
 
     @media (orientation: landscape) {
@@ -201,7 +193,6 @@
           <rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" />
         </svg>
       </a>
-      <button type="button" id="color-toggle-btn" class="control-btn color-toggle-btn" title="Cycle Clock Color (Red)" aria-label="Cycle Clock Color"></button>
       <button type="button" id="theme-mode-btn" class="control-btn" title="Toggle Light / Dark Mode" aria-label="Toggle Light or Dark Mode">
         <svg id="theme-mode-icon" viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="12" r="4" />
@@ -258,66 +249,25 @@
     };
     hourBtn.addEventListener('click', () => applyHourFormat(!is24Hour));
 
-    const BASE_COLORS = {
-      red:    ['#e53935', '229, 57, 53', 'Red'],
-      blue:   ['#29b6f6', '41, 182, 246', 'Blue'],
-      green:  ['#00e676', '0, 230, 118', 'Green'],
-      yellow: ['#ffea00', '255, 234, 0', 'Yellow'],
-      white:  ['#ffffff', '255, 255, 255', 'White'],
-      black:  ['#000000', '0, 0, 0', 'Black']
-    };
-
-    const colorToggleBtn = document.getElementById('color-toggle-btn');
     const themeModeBtn = document.getElementById('theme-mode-btn');
     const themeModeIcon = document.getElementById('theme-mode-icon');
     const sunSvg = '<circle cx="12" cy="12" r="4" /><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41" />';
     const moonSvg = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />';
-
     let isLightMode = false;
-    let currentColorKey = 'red';
-    const getCycleOrder = () => ['red', 'blue', 'green', 'yellow', isLightMode ? 'black' : 'white'];
-
-    const applyTheme = (key) => {
-      const order = getCycleOrder();
-      currentColorKey = order.includes(key) ? key : 'red';
-      const [hex, rgb, label] = BASE_COLORS[currentColorKey];
-      const st = document.documentElement.style;
-      st.setProperty('--c', hex);
-      st.setProperty('--glow-strong', `rgba(${rgb}, 0.75)`);
-      st.setProperty('--glow-soft', `rgba(${rgb}, 0.25)`);
-      st.setProperty('--btn-border', `rgba(${rgb}, 0.45)`);
-      st.setProperty('--btn-bg', `rgba(${rgb}, 0.06)`);
-      st.setProperty('--btn-hover', `rgba(${rgb}, 0.18)`);
-      st.setProperty('--btn-shadow', `rgba(${rgb}, 0.35)`);
-      colorToggleBtn.title = `Cycle Clock Color (${label})`;
-      try { localStorage.setItem('clockThemeColor', currentColorKey); } catch (_) {}
-    };
 
     const applyLightMode = (light) => {
       isLightMode = Boolean(light);
       document.body.classList.toggle('light-mode', isLightMode);
       themeModeIcon.innerHTML = isLightMode ? moonSvg : sunSvg;
-      if (isLightMode && currentColorKey === 'white') currentColorKey = 'black';
-      else if (!isLightMode && currentColorKey === 'black') currentColorKey = 'white';
-      applyTheme(currentColorKey);
       try { localStorage.setItem('clockLightMode', String(isLightMode)); } catch (_) {}
     };
-
-    colorToggleBtn.addEventListener('click', () => {
-      const order = getCycleOrder();
-      applyTheme(order[(order.indexOf(currentColorKey) + 1) % order.length]);
-    });
     themeModeBtn.addEventListener('click', () => applyLightMode(!isLightMode));
 
     try {
-      const savedLight = localStorage.getItem('clockLightMode') === 'true';
-      const savedColor = localStorage.getItem('clockThemeColor');
-      const saved24 = localStorage.getItem('clockIs24Hour') === 'true';
-      if (savedColor && BASE_COLORS[savedColor]) currentColorKey = savedColor;
-      applyLightMode(savedLight);
-      applyHourFormat(saved24);
+      applyLightMode(localStorage.getItem('clockLightMode') === 'true');
+      applyHourFormat(localStorage.getItem('clockIs24Hour') === 'true');
     } catch (_) {
-      applyTheme('red');
+      applyLightMode(false);
       applyHourFormat(false);
     }
 
